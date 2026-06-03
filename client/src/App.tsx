@@ -1,5 +1,11 @@
+import ItemCard from './components/ItemCard';
+
 function App() {
-    return <></>;
+    return (
+        <>
+            <ItemCard />
+        </>
+    );
 }
 
 export default App;

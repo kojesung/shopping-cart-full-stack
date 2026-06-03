@@ -18,6 +18,7 @@ export default function ItemActionButton({ text, children }: ItemActionButtonPro
 
 const ItemActionButtonContainer = styled.button`
     height: 24px;
+    min-width: 24px;
     display: flex;
     justify-content: center;
     align-items: center;

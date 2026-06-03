@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import CheckBox from './CheckBox';
+import ItemActionButton from './ItemActionButton';
 
 interface ItemCardProps {
     checkStatus: boolean;
@@ -28,17 +29,19 @@ export default function ItemCard({
         <ItemCartStyle>
             <CheckDeleteArea>
                 <CheckBox checkStatus={checkStatus} handleCheckClick={handleCheckboxClick} />
-                <button onClick={handleDeleteClick}>삭제</button>
+                <ItemActionButton onClick={handleDeleteClick} text="삭제"></ItemActionButton>
             </CheckDeleteArea>
             <ItemInfoArea>
                 <ItemImage src={itemImgUrl} />
                 <ItemDetailInfo>
-                    <ItemName>{itemName}</ItemName>
-                    <ItemPrice>{itemPrice.toLocaleString()}원</ItemPrice>
+                    <>
+                        <ItemName>{itemName}</ItemName>
+                        <ItemPrice>{itemPrice.toLocaleString()}원</ItemPrice>
+                    </>
                     <ItemQuantityArea>
-                        <QuantityMinusButton onClick={handleQuantityMinusClick}>-</QuantityMinusButton>
+                        <ItemActionButton onClick={handleQuantityMinusClick} text="-" />
                         <Quantity>{quantity}</Quantity>
-                        <QuantityPlusButton onClick={handleQuantityPlusClick}>+</QuantityPlusButton>
+                        <ItemActionButton onClick={handleQuantityPlusClick} text="+" />
                     </ItemQuantityArea>
                 </ItemDetailInfo>
             </ItemInfoArea>
@@ -52,6 +55,9 @@ const ItemCartStyle = styled.div`
     border-top: 1px solid #000000;
     padding-top: 12px;
     box-sizing: content-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 `;
 
 const CheckDeleteArea = styled.div`
@@ -80,14 +86,31 @@ const ItemDetailInfo = styled.div`
     justify-content: center;
 `;
 
-const ItemName = styled.p``;
+const ItemName = styled.p`
+    margin: 0;
+    font-weight: 500;
+    font-size: 12px;
+    color: #0a0d13;
+    line-height: 15px;
+`;
 
-const ItemPrice = styled.p``;
+const ItemPrice = styled.p`
+    margin: 0;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 100%;
+`;
 
-const ItemQuantityArea = styled.div``;
+const ItemQuantityArea = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 4.5px;
+`;
 
-const QuantityMinusButton = styled.button``;
-
-const Quantity = styled.p``;
-
-const QuantityPlusButton = styled.button``;
+const Quantity = styled.p`
+    margin: 0;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+    letter-spacing: 0%;
+`;

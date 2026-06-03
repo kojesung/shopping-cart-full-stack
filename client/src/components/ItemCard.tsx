@@ -1,5 +1,17 @@
 import styled from '@emotion/styled';
 
+interface ItemCardProps {
+    checkStatus: boolean;
+    handleCheckboxClick: () => void;
+    quantity: number;
+    handleQuantityPlusClick: () => void;
+    handleQuantityMinusClick: () => void;
+    itemPrice: number;
+    itemName: string;
+    itemImgUrl: string;
+    handleDeleteClick: (id: number) => void;
+}
+
 export default function ItemCard() {
     return (
         <ItemCartStyle>

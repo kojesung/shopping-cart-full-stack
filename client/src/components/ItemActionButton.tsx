@@ -10,7 +10,7 @@ type NodeChildren = {
     children: React.ReactNode;
 };
 
-type ItemActionButtonProps = TextChildren | NodeChildren;
+type ItemActionButtonProps = (TextChildren | NodeChildren) & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export default function ItemActionButton({ text, children }: ItemActionButtonProps) {
     return <ItemActionButtonContainer>{text ? text : children}</ItemActionButtonContainer>;

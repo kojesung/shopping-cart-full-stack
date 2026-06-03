@@ -25,4 +25,7 @@ const ItemActionButtonContainer = styled.button`
     font-size: 12px;
     line-height: 15px;
     color: #0a0d13;
+    border: 1px solid #0000001a;
+    background-color: #ffffff;
+    border-radius: 4px;
 `;

@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import CheckBox from './CheckBox';
 
 interface ItemCardProps {
     checkStatus: boolean;
@@ -9,22 +10,35 @@ interface ItemCardProps {
     itemPrice: number;
     itemName: string;
     itemImgUrl: string;
-    handleDeleteClick: (id: number) => void;
+    handleDeleteClick: () => void;
 }
 
-export default function ItemCard() {
+export default function ItemCard({
+    checkStatus,
+    handleCheckboxClick,
+    quantity,
+    handleQuantityPlusClick,
+    handleQuantityMinusClick,
+    itemPrice,
+    itemName,
+    itemImgUrl,
+    handleDeleteClick,
+}: ItemCardProps) {
     return (
         <ItemCartStyle>
-            <CheckDeleteArea></CheckDeleteArea>
+            <CheckDeleteArea>
+                <CheckBox checkStatus={checkStatus} handleCheckClick={handleCheckboxClick} />
+                <button onClick={handleDeleteClick}>삭제</button>
+            </CheckDeleteArea>
             <ItemInfoArea>
-                <ItemImage />
+                <ItemImage src={itemImgUrl} />
                 <ItemDetailInfo>
-                    <ItemName>상품이름A</ItemName>
-                    <ItemPrice>35,000워</ItemPrice>
+                    <ItemName>{itemName}</ItemName>
+                    <ItemPrice>{itemPrice.toLocaleString()}원</ItemPrice>
                     <ItemQuantityArea>
-                        <QuantityMinusButton>-</QuantityMinusButton>
-                        <Quantity>2</Quantity>
-                        <QuantityPlusButton>+</QuantityPlusButton>
+                        <QuantityMinusButton onClick={handleQuantityMinusClick}>-</QuantityMinusButton>
+                        <Quantity>{quantity}</Quantity>
+                        <QuantityPlusButton onClick={handleQuantityPlusClick}>+</QuantityPlusButton>
                     </ItemQuantityArea>
                 </ItemDetailInfo>
             </ItemInfoArea>

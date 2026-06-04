@@ -8,7 +8,14 @@ export const useCart = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [apiStatus, setApiStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-    const { checkStatus, toggle: handleToggle, remove: removeCheck, initCheckStatus } = useCheckboxStatus(3);
+    const {
+        checkStatus,
+        isAllChecked,
+        toggle: handleToggle,
+        toggleAll: handleToggleAll,
+        remove: removeCheck,
+        initCheckStatus,
+    } = useCheckboxStatus(0);
     const {
         quantityStatus,
         increase,
@@ -60,5 +67,16 @@ export const useCart = () => {
         removeCheck(index);
         removeQuantity(index);
     };
-    return { products, quantityStatus, checkStatus, apiStatus, handleIncrease, handleDecrease, handleToggle, remove };
+    return {
+        products,
+        quantityStatus,
+        checkStatus,
+        isAllChecked,
+        apiStatus,
+        handleIncrease,
+        handleDecrease,
+        handleToggle,
+        handleToggleAll,
+        remove,
+    };
 };

@@ -7,9 +7,11 @@ interface CartItemsProps {
     products: Product[];
     quantityStatus: number[];
     checkStatus: boolean[];
+    isAllChecked: boolean;
     onIncrease: (index: number) => void;
     onDecrease: (index: number) => void;
     onToggle: (index: number) => void;
+    onToggleAll: () => void;
     onDelete: (index: number) => void;
 }
 
@@ -17,14 +19,16 @@ export default function CartItems({
     products,
     quantityStatus,
     checkStatus,
+    isAllChecked,
     onIncrease,
     onDecrease,
     onToggle,
+    onToggleAll,
     onDelete,
 }: CartItemsProps) {
     return (
         <CartItemsStyle>
-            <CheckBox checkStatus={false} handleCheckClick={() => null} />
+            <CheckBox checkStatus={isAllChecked} handleCheckClick={onToggleAll} />
             {products.map((product, index) => (
                 <ItemCard
                     key={product.id}

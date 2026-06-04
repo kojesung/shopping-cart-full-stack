@@ -3,7 +3,7 @@ import CartItems from '../components/CartItems';
 import { useCart } from '../hooks/useCart';
 
 export default function CartPage() {
-    const { products, quantityStatus, checkStatus, apiStatus, handleIncrease, handleDecrease, handleToggle, remove } =
+    const { products, quantityStatus, checkStatus, isAllChecked, apiStatus, handleIncrease, handleDecrease, handleToggle, handleToggleAll, remove } =
         useCart();
 
     const orderAmount = products.reduce(
@@ -26,9 +26,11 @@ export default function CartPage() {
                 products={products}
                 quantityStatus={quantityStatus}
                 checkStatus={checkStatus}
+                isAllChecked={isAllChecked}
                 onIncrease={handleIncrease}
                 onDecrease={handleDecrease}
                 onToggle={handleToggle}
+                onToggleAll={handleToggleAll}
                 onDelete={remove}
             />
             <OrderInfoSection>

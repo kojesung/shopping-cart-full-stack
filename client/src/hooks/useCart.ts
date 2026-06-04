@@ -32,7 +32,7 @@ export const useCart = () => {
         };
 
         fetchCart();
-    }, [initCheckStatus, initQuantityStatus]);
+    }, []);
 
     const handleIncrease = (index: number) => {
         optimisticUpdate({
@@ -50,9 +50,15 @@ export const useCart = () => {
         });
     };
 
-    const remove = (index: number) => {
+    const remove = async (index: number) => {
+        try {
+            await cartApiService.deleteCartProduct(1, products[index].id);
+        } catch {
+            return;
+        }
+        setProducts((prev) => prev.filter((_, i) => i !== index));
         removeCheck(index);
         removeQuantity(index);
     };
-    return { handleIncrease, handleDecrease, handleToggle, remove, checkStatus, apiStatus };
+    return { products, quantityStatus, checkStatus, apiStatus, handleIncrease, handleDecrease, handleToggle, remove };
 };

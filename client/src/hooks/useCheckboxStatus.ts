@@ -11,8 +11,8 @@ export const useCheckboxStatus = (productCount: number) => {
         setCheckStatus((prev) => prev.filter((_, i) => index !== i));
     };
 
-    const initCheckStatus = (number) => {
-        setCheckStatus(Array.from({ length: number }, () => true));
+    const initCheckStatus = (statuses: boolean[]) => {
+        setCheckStatus(statuses);
     };
 
     const isAllChecked = checkStatus.length > 0 && checkStatus.every(Boolean);

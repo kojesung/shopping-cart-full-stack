@@ -29,8 +29,11 @@ export const useCart = () => {
             setApiStatus('loading');
             try {
                 const data = await cartApiService.getCart(1);
+                const savedJson = localStorage.getItem('cart_checked_ids');
+                const savedIds = savedJson ? new Set(JSON.parse(savedJson) as number[]) : null;
+                const statuses = data.data.products.map((p) => (savedIds ? savedIds.has(p.id) : true));
                 setProducts(data.data.products);
-                initCheckStatus(data.data.products.length);
+                initCheckStatus(statuses);
                 initQuantityStatus(data.data.products.map((p) => p.quantity));
                 setApiStatus('success');
             } catch {
@@ -40,6 +43,12 @@ export const useCart = () => {
 
         fetchCart();
     }, []);
+
+    useEffect(() => {
+        if (products.length === 0) return;
+        const checkedIds = products.filter((_, i) => checkStatus[i]).map((p) => p.id);
+        localStorage.setItem('cart_checked_ids', JSON.stringify(checkedIds));
+    }, [checkStatus, products]);
 
     const handleIncrease = (index: number) => {
         optimisticUpdate({

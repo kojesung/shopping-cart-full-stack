@@ -18,5 +18,9 @@ export const useQuantityStatus = (initialQuantities: number[]) => {
         setQuantityStatus((prev) => prev.filter((_, i) => index !== i));
     };
 
-    return { quantityStatus, increase, decrease, remove };
+    const initQuantityStatus = (quantities: number[]) => {
+        setQuantityStatus(quantities);
+    };
+
+    return { quantityStatus, increase, decrease, remove, initQuantityStatus };
 };

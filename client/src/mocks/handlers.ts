@@ -17,14 +17,23 @@ interface Cart {
     products: CartProduct[];
 }
 
+const PLACEHOLDER_IMG =
+    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='112' height='112'%3E%3Crect width='112' height='112' fill='%23e5e7eb'/%3E%3C/svg%3E";
+
 const initialProducts: Product[] = [
-    { id: 1, price: 18000, name: 'Shopping Basket', imgUrl: 'https://example.com/images/shopping-basket.png' },
-    { id: 2, price: 32000, name: 'Tote Bag', imgUrl: 'https://example.com/images/tote-bag.png' },
-    { id: 3, price: 9900, name: 'Reusable Cup', imgUrl: 'https://example.com/images/reusable-cup.png' },
+    { id: 1, price: 18000, name: 'Shopping Basket', imgUrl: PLACEHOLDER_IMG },
+    { id: 2, price: 32000, name: 'Tote Bag', imgUrl: PLACEHOLDER_IMG },
+    { id: 3, price: 9900, name: 'Reusable Cup', imgUrl: PLACEHOLDER_IMG },
 ];
 
 const initialCarts: Cart[] = [
-    { id: 1, products: [{ id: 1, quantity: 2 }, { id: 3, quantity: 1 }] },
+    {
+        id: 1,
+        products: [
+            { id: 1, quantity: 2 },
+            { id: 3, quantity: 1 },
+        ],
+    },
     { id: 2, products: [{ id: 2, quantity: 1 }] },
 ];
 
@@ -67,7 +76,11 @@ export const handlers = [
 
         if (index === -1) {
             return HttpResponse.json(
-                { status: 404, errorCode: 'RESOURCE_NOT_FOUND', errorMessage: 'id에 해당하는 상품이 존재하지 않습니다.' },
+                {
+                    status: 404,
+                    errorCode: 'RESOURCE_NOT_FOUND',
+                    errorMessage: 'id에 해당하는 상품이 존재하지 않습니다.',
+                },
                 { status: 404 }
             );
         }
@@ -82,7 +95,11 @@ export const handlers = [
 
         if (!cart) {
             return HttpResponse.json(
-                { status: 404, errorCode: 'RESOURCE_NOT_FOUND', errorMessage: 'id에 해당하는 장바구니가 존재하지 않습니다.' },
+                {
+                    status: 404,
+                    errorCode: 'RESOURCE_NOT_FOUND',
+                    errorMessage: 'id에 해당하는 장바구니가 존재하지 않습니다.',
+                },
                 { status: 404 }
             );
         }
@@ -106,7 +123,11 @@ export const handlers = [
         const cart = carts.find((c) => c.id === cartId);
         if (!cart) {
             return HttpResponse.json(
-                { status: 404, errorCode: 'RESOURCE_NOT_FOUND', errorMessage: 'id에 해당하는 장바구니 상품이 존재하지 않습니다.' },
+                {
+                    status: 404,
+                    errorCode: 'RESOURCE_NOT_FOUND',
+                    errorMessage: 'id에 해당하는 장바구니 상품이 존재하지 않습니다.',
+                },
                 { status: 404 }
             );
         }
@@ -114,7 +135,11 @@ export const handlers = [
         const cartProduct = cart.products.find((p) => p.id === productId);
         if (!cartProduct) {
             return HttpResponse.json(
-                { status: 404, errorCode: 'RESOURCE_NOT_FOUND', errorMessage: 'id에 해당하는 장바구니 상품이 존재하지 않습니다.' },
+                {
+                    status: 404,
+                    errorCode: 'RESOURCE_NOT_FOUND',
+                    errorMessage: 'id에 해당하는 장바구니 상품이 존재하지 않습니다.',
+                },
                 { status: 404 }
             );
         }
@@ -131,7 +156,11 @@ export const handlers = [
         const cart = carts.find((c) => c.id === cartId);
         if (!cart) {
             return HttpResponse.json(
-                { status: 404, errorCode: 'RESOURCE_NOT_FOUND', errorMessage: 'id에 해당하는 장바구니 상품이 존재하지 않습니다.' },
+                {
+                    status: 404,
+                    errorCode: 'RESOURCE_NOT_FOUND',
+                    errorMessage: 'id에 해당하는 장바구니 상품이 존재하지 않습니다.',
+                },
                 { status: 404 }
             );
         }
@@ -139,7 +168,11 @@ export const handlers = [
         const index = cart.products.findIndex((p) => p.id === productId);
         if (index === -1) {
             return HttpResponse.json(
-                { status: 404, errorCode: 'RESOURCE_NOT_FOUND', errorMessage: 'id에 해당하는 장바구니 상품이 존재하지 않습니다.' },
+                {
+                    status: 404,
+                    errorCode: 'RESOURCE_NOT_FOUND',
+                    errorMessage: 'id에 해당하는 장바구니 상품이 존재하지 않습니다.',
+                },
                 { status: 404 }
             );
         }

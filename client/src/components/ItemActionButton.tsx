@@ -12,8 +12,8 @@ type NodeChildren = {
 
 type ItemActionButtonProps = (TextChildren | NodeChildren) & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
-export default function ItemActionButton({ text, children }: ItemActionButtonProps) {
-    return <ItemActionButtonContainer>{text ? text : children}</ItemActionButtonContainer>;
+export default function ItemActionButton({ text, children, onClick }: ItemActionButtonProps) {
+    return <ItemActionButtonContainer onClick={onClick}>{text ? text : children}</ItemActionButtonContainer>;
 }
 
 const ItemActionButtonContainer = styled.button`

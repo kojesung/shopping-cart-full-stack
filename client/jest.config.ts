@@ -1,6 +1,6 @@
 export default {
     testEnvironment: 'jsdom',
-    setupFilesAfterFramework: ['@testing-library/jest-dom'],
+    setupFilesAfterFramework: ['@testing-library/jest-dom', '<rootDir>/src/mocks/setup.ts'],
     transform: {
         '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',
     },

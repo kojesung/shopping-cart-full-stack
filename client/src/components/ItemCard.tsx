@@ -39,9 +39,9 @@ export default function ItemCard({
                         <ItemPrice>{itemPrice.toLocaleString()}원</ItemPrice>
                     </>
                     <ItemQuantityArea>
-                        <ItemActionButton onClick={handleQuantityMinusClick} text="-" />
+                        <ItemActionButton onClick={handleQuantityMinusClick} text="-" disabled={quantity <= 0} />
                         <Quantity>{quantity}</Quantity>
-                        <ItemActionButton onClick={handleQuantityPlusClick} text="+" />
+                        <ItemActionButton onClick={handleQuantityPlusClick} text="+" disabled={quantity >= 99} />
                     </ItemQuantityArea>
                 </ItemDetailInfo>
             </ItemInfoArea>

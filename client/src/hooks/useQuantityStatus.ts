@@ -8,7 +8,7 @@ export const useQuantityStatus = (initialQuantities: number[]) => {
     const [quantityStatus, setQuantityStatus] = useState<number[]>(initialQuantities);
 
     const increase = (index: number) => {
-        setQuantityStatus((prev) => prev.map((quantity, i) => (index === i ? quantity + 1 : quantity)));
+        setQuantityStatus((prev) => prev.map((quantity, i) => (index === i ? Math.min(quantity + 1, 99) : quantity)));
     };
     const decrease = (index: number) => {
         setQuantityStatus((prev) => prev.map((quantity, i) => (index === i ? quantity - 1 : quantity)));

@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
 import type { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface PageLayoutProps {
     children: ReactNode;
     bottomButtonLabel: string;
     onBottomButtonClick: () => void;
     isBottomButtonDisabled?: boolean;
+    showBackButton?: boolean;
 }
 
 export default function PageLayout({
@@ -13,11 +15,18 @@ export default function PageLayout({
     bottomButtonLabel,
     onBottomButtonClick,
     isBottomButtonDisabled = false,
+    showBackButton = false,
 }: PageLayoutProps) {
+    const navigate = useNavigate();
+
     return (
         <Wrapper>
             <Header>
-                <HeaderTitle>SHOP</HeaderTitle>
+                {showBackButton ? (
+                    <BackButton onClick={() => navigate(-1)}>←</BackButton>
+                ) : (
+                    <HeaderTitle>SHOP</HeaderTitle>
+                )}
             </Header>
             <Main>{children}</Main>
             <BottomButton onClick={onBottomButtonClick} disabled={isBottomButtonDisabled}>
@@ -53,6 +62,16 @@ const HeaderTitle = styled.h1`
     line-height: 16px;
     color: white;
     margin: 0;
+`;
+
+const BackButton = styled.button`
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
 `;
 
 const Main = styled.main`

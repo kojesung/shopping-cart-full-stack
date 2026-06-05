@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import CartItems from '../components/CartItems';
 import PageLayout from '../layouts/PageLayout';
 import { useCart } from '../hooks/useCart';
@@ -24,12 +25,24 @@ export default function CartPage() {
     const deliveryFee = orderAmount >= 100000 ? 0 : 3000;
     const totalAmount = orderAmount + deliveryFee;
 
+    const totalQuantity = products.reduce((sum, _, i) => sum + (checkStatus[i] ? quantityStatus[i] : 0), 0);
     const isButtonDisabled = apiStatus !== 'success' || !checkStatus.some(Boolean);
+
+    const navigate = useNavigate();
+    const handleOrder = () => {
+        navigate('/order-confirm', {
+            state: {
+                productCount: checkStatus.filter(Boolean).length,
+                totalQuantity,
+                totalAmount,
+            },
+        });
+    };
 
     return (
         <PageLayout
             bottomButtonLabel="주문 확인"
-            onBottomButtonClick={() => {}}
+            onBottomButtonClick={handleOrder}
             isBottomButtonDisabled={isButtonDisabled}
         >
             {apiStatus === 'loading' && <p>로딩 중...</p>}

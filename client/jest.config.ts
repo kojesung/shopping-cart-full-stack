@@ -11,7 +11,9 @@ export default {
     transformIgnorePatterns: [],
     moduleNameMapper: {
         '\\.(css|less|scss)$': 'identity-obj-proxy',
+        '\\.(svg|png|jpg|jpeg|gif|webp)$': '<rootDir>/src/__tests__/__mocks__/fileMock.ts',
         '^@/(.*)$': '<rootDir>/src/$1',
     },
     testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+    testPathIgnorePatterns: ['/node_modules/', '/__mocks__/'],
 };

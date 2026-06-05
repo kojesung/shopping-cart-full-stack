@@ -16,13 +16,7 @@ export const useCart = () => {
         remove: removeCheck,
         initCheckStatus,
     } = useCheckboxStatus(0);
-    const {
-        quantityStatus,
-        increase,
-        decrease,
-        remove: removeQuantity,
-        initQuantityStatus,
-    } = useQuantityStatus([1, 2, 3]);
+    const { quantityStatus, increase, decrease, remove: removeQuantity, initQuantityStatus } = useQuantityStatus([]);
 
     useEffect(() => {
         const fetchCart = async () => {

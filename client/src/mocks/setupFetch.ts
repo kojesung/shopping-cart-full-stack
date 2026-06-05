@@ -1,3 +1,5 @@
+process.env.VITE_API_BASE_URL = 'http://localhost:3000';
+
 import { TextDecoder, TextEncoder } from 'util';
 import { ReadableStream, TransformStream, WritableStream } from 'stream/web';
 import { BroadcastChannel } from 'worker_threads';

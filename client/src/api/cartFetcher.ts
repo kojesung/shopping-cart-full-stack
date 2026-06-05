@@ -17,6 +17,7 @@ export const cartFetcher = async <ExpectedSuccessType>(endpoint: string, options
         ...options,
         headers: {
             accept: 'application/json',
+            ...(options.body ? { 'Content-Type': 'application/json' } : {}),
             ...options.headers,
         },
     };

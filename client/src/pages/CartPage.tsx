@@ -51,38 +51,46 @@ export default function CartPage() {
                 <>
                     <HeadingContents>
                         <Heading>장바구니</Heading>
-                        <CartDescription>
-                            현재 {checkStatus.filter(Boolean).length}종류의 상품이 담겨있습니다.
-                        </CartDescription>
+                        {products.length > 0 && (
+                            <CartDescription>
+                                현재 {checkStatus.filter(Boolean).length}종류의 상품이 담겨있습니다.
+                            </CartDescription>
+                        )}
                     </HeadingContents>
-                    <CartItems
-                        products={products}
-                        quantityStatus={quantityStatus}
-                        checkStatus={checkStatus}
-                        isAllChecked={isAllChecked}
-                        onIncrease={handleIncrease}
-                        onDecrease={handleDecrease}
-                        onToggle={handleToggle}
-                        onToggleAll={handleToggleAll}
-                        onDelete={remove}
-                    />
-                    <OrderInfoSection>
-                        <p>총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다.</p>
-                        <hr />
-                        <OrderTypeAmount>
-                            <OrderType>주문 금액</OrderType>
-                            <OrderAmount>{orderAmount.toLocaleString()}원</OrderAmount>
-                        </OrderTypeAmount>
-                        <OrderTypeAmount>
-                            <OrderType>배송비</OrderType>
-                            <OrderAmount>{deliveryFee.toLocaleString()}원</OrderAmount>
-                        </OrderTypeAmount>
-                        <hr />
-                        <OrderTypeAmount>
-                            <OrderType>총 결제 금액</OrderType>
-                            <OrderAmount>{totalAmount.toLocaleString()}원</OrderAmount>
-                        </OrderTypeAmount>
-                    </OrderInfoSection>
+                    {products.length === 0 ? (
+                        <p>장바구니에 담은 상품이 없습니다.</p>
+                    ) : (
+                        <>
+                            <CartItems
+                                products={products}
+                                quantityStatus={quantityStatus}
+                                checkStatus={checkStatus}
+                                isAllChecked={isAllChecked}
+                                onIncrease={handleIncrease}
+                                onDecrease={handleDecrease}
+                                onToggle={handleToggle}
+                                onToggleAll={handleToggleAll}
+                                onDelete={remove}
+                            />
+                            <OrderInfoSection>
+                                <p>총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다.</p>
+                                <hr />
+                                <OrderTypeAmount>
+                                    <OrderType>주문 금액</OrderType>
+                                    <OrderAmount>{orderAmount.toLocaleString()}원</OrderAmount>
+                                </OrderTypeAmount>
+                                <OrderTypeAmount>
+                                    <OrderType>배송비</OrderType>
+                                    <OrderAmount>{deliveryFee.toLocaleString()}원</OrderAmount>
+                                </OrderTypeAmount>
+                                <hr />
+                                <OrderTypeAmount>
+                                    <OrderType>총 결제 금액</OrderType>
+                                    <OrderAmount>{totalAmount.toLocaleString()}원</OrderAmount>
+                                </OrderTypeAmount>
+                            </OrderInfoSection>
+                        </>
+                    )}
                 </>
             )}
         </PageLayout>

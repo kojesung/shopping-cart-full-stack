@@ -1,9 +1,14 @@
 export default {
     testEnvironment: 'jsdom',
-    setupFilesAfterFramework: ['@testing-library/jest-dom', '<rootDir>/src/mocks/setup.ts'],
-    transform: {
-        '^.+\\.(ts|tsx|js|jsx)$': 'babel-jest',
+    testEnvironmentOptions: {
+        customExportConditions: ['node', 'require', 'default'],
     },
+    setupFiles: ['<rootDir>/src/mocks/setupFetch.ts'],
+    setupFilesAfterEnv: ['@testing-library/jest-dom', '<rootDir>/src/mocks/setup.ts'],
+    transform: {
+        '^.+\\.(ts|tsx|js|jsx|mjs)$': 'babel-jest',
+    },
+    transformIgnorePatterns: [],
     moduleNameMapper: {
         '\\.(css|less|scss)$': 'identity-obj-proxy',
         '^@/(.*)$': '<rootDir>/src/$1',

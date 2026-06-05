@@ -11,7 +11,7 @@ export const useQuantityStatus = (initialQuantities: number[]) => {
         setQuantityStatus((prev) => prev.map((quantity, i) => (index === i ? Math.min(quantity + 1, 99) : quantity)));
     };
     const decrease = (index: number) => {
-        setQuantityStatus((prev) => prev.map((quantity, i) => (index === i ? quantity - 1 : quantity)));
+        setQuantityStatus((prev) => prev.map((quantity, i) => (index === i ? Math.max(quantity - 1, 0) : quantity)));
     };
 
     const remove = (index: number) => {

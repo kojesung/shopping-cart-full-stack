@@ -1,10 +1,15 @@
-import ItemCard from './components/ItemCard';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import CartPage from './pages/CartPage';
+import OrderConfirmPage from './pages/OrderConfirmPage';
 
 function App() {
     return (
-        <>
-            <ItemCard />
-        </>
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<CartPage />} />
+                <Route path="/order-confirm" element={<OrderConfirmPage />} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 

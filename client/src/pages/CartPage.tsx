@@ -4,6 +4,9 @@ import CartItems from '../components/CartItems';
 import PageLayout from '../layouts/PageLayout';
 import { useCart } from '../hooks/useCart';
 
+const FREE_DELIVERY_THRESHOLD = 100000;
+const DELIVERY_FEE = 3000;
+
 export default function CartPage() {
     const {
         products,
@@ -22,7 +25,7 @@ export default function CartPage() {
         (sum, product, index) => sum + (checkStatus[index] ? product.price * quantityStatus[index] : 0),
         0
     );
-    const deliveryFee = orderAmount >= 100000 ? 0 : 3000;
+    const deliveryFee = orderAmount >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
     const totalAmount = orderAmount + deliveryFee;
 
     const totalQuantity = products.reduce((sum, _, i) => sum + (checkStatus[i] ? quantityStatus[i] : 0), 0);
@@ -73,7 +76,7 @@ export default function CartPage() {
                                 onDelete={remove}
                             />
                             <OrderInfoSection>
-                                <p>총 주문 금액이 100,000원 이상일 경우 무료 배송됩니다.</p>
+                                <p>총 주문 금액이 {FREE_DELIVERY_THRESHOLD.toLocaleString()}원 이상일 경우 무료 배송됩니다.</p>
                                 <hr />
                                 <OrderTypeAmount>
                                     <OrderType>주문 금액</OrderType>

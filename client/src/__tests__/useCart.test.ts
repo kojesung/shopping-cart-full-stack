@@ -53,7 +53,7 @@ describe('useCart', () => {
         await waitFor(() => expect(result.current.apiStatus).toBe('success'));
 
         await act(async () => {
-            result.current.handleIncrease(0);
+            result.current.handleIncrease(1);
         });
 
         expect(result.current.quantityStatus[0]).toBe(3);
@@ -64,7 +64,7 @@ describe('useCart', () => {
         await waitFor(() => expect(result.current.apiStatus).toBe('success'));
 
         await act(async () => {
-            await result.current.remove(0);
+            await result.current.remove(1);
         });
 
         expect(result.current.products).toHaveLength(1);
@@ -82,7 +82,7 @@ describe('useCart', () => {
         );
 
         await act(async () => {
-            await result.current.remove(0);
+            await result.current.remove(1);
         });
 
         expect(result.current.products).toHaveLength(2);

@@ -28,7 +28,7 @@ export default function CartItems({
 }: CartItemsProps) {
     return (
         <CartItemsStyle>
-            <CheckBox checkStatus={isAllChecked} handleCheckClick={onToggleAll} />
+            <CheckBox checked={isAllChecked} onClick={onToggleAll} />
             {products.map((product, index) => (
                 <ItemCard
                     key={product.id}

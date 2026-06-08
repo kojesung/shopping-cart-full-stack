@@ -25,7 +25,7 @@ export default function ItemCard({
     return (
         <ItemCartStyle>
             <CheckDeleteArea>
-                <CheckBox checkStatus={checkStatus} handleCheckClick={handleCheckboxClick} />
+                <CheckBox checked={checkStatus} onClick={handleCheckboxClick} />
                 <ItemActionButton onClick={handleDeleteClick} text="삭제"></ItemActionButton>
             </CheckDeleteArea>
             <ItemInfoArea>

@@ -3,9 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import CartItems from '../components/CartItems';
 import PageLayout from '../layouts/PageLayout';
 import { useCart } from '../hooks/useCart';
-
-const FREE_DELIVERY_THRESHOLD = 100000;
-const DELIVERY_FEE = 3000;
+import { getOrderSummary, FREE_DELIVERY_THRESHOLD } from '../utils/orderSummary';
 
 export default function CartPage() {
     const {
@@ -21,14 +19,7 @@ export default function CartPage() {
         remove,
     } = useCart();
 
-    const orderAmount = products.reduce(
-        (sum, product, index) => sum + (checkStatus[index] ? product.price * quantityStatus[index] : 0),
-        0
-    );
-    const deliveryFee = orderAmount >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
-    const totalAmount = orderAmount + deliveryFee;
-
-    const totalQuantity = products.reduce((sum, _, i) => sum + (checkStatus[i] ? quantityStatus[i] : 0), 0);
+    const { orderAmount, deliveryFee, totalAmount, totalQuantity } = getOrderSummary(products, quantityStatus, checkStatus);
     const isButtonDisabled = apiStatus !== 'success' || !checkStatus.some(Boolean);
 
     const navigate = useNavigate();

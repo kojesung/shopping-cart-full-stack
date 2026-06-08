@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react';
 import { optimisticUpdate } from '../optimisticUpdate';
 import { useCheckboxStatus } from './useCheckboxStatus';
 import { useQuantityStatus } from './useQuantityStatus';
-import { cartApiService, type Product } from '../api/cartApiService';
+import { cartApiService, type CartProduct, type Product } from '../api/cartApiService';
+
+export interface CartItem extends CartProduct {
+    checked: boolean;
+}
 
 export const useCart = () => {
     const [products, setProducts] = useState<Product[]>([]);
+    const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [apiStatus, setApiStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
     const {

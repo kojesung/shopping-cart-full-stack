@@ -8,11 +8,11 @@ interface CartItemsProps {
     quantityStatus: number[];
     checkStatus: boolean[];
     isAllChecked: boolean;
-    onIncrease: (index: number) => void;
-    onDecrease: (index: number) => void;
-    onToggle: (index: number) => void;
+    onIncrease: (productId: number) => void;
+    onDecrease: (productId: number) => void;
+    onToggle: (productId: number) => void;
     onToggleAll: () => void;
-    onDelete: (index: number) => void;
+    onDelete: (productId: number) => void;
 }
 
 export default function CartItems({
@@ -33,14 +33,14 @@ export default function CartItems({
                 <ItemCard
                     key={product.id}
                     checkStatus={checkStatus[index]}
-                    handleCheckboxClick={() => onToggle(index)}
+                    handleCheckboxClick={() => onToggle(product.id)}
                     quantity={quantityStatus[index]}
-                    handleQuantityPlusClick={() => onIncrease(index)}
-                    handleQuantityMinusClick={() => onDecrease(index)}
+                    handleQuantityPlusClick={() => onIncrease(product.id)}
+                    handleQuantityMinusClick={() => onDecrease(product.id)}
                     itemPrice={product.price}
                     itemName={product.name}
                     itemImgUrl={product.imgUrl}
-                    handleDeleteClick={() => onDelete(index)}
+                    handleDeleteClick={() => onDelete(product.id)}
                 />
             ))}
         </CartItemsStyle>

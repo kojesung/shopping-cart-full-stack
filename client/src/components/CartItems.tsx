@@ -37,9 +37,7 @@ export default function CartItems({
                     quantity={quantityStatus[index]}
                     handleQuantityPlusClick={() => onIncrease(product.id)}
                     handleQuantityMinusClick={() => onDecrease(product.id)}
-                    itemPrice={product.price}
-                    itemName={product.name}
-                    itemImgUrl={product.imgUrl}
+                    product={product}
                     handleDeleteClick={() => onDelete(product.id)}
                 />
             ))}

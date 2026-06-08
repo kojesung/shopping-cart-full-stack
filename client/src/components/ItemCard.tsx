@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import CheckBox from './CheckBox';
 import ItemActionButton from './ItemActionButton';
+import type { Product } from '../api/cartApiService';
 
 interface ItemCardProps {
     checkStatus: boolean;
@@ -8,9 +9,7 @@ interface ItemCardProps {
     quantity: number;
     handleQuantityPlusClick: () => void;
     handleQuantityMinusClick: () => void;
-    itemPrice: number;
-    itemName: string;
-    itemImgUrl: string;
+    product: Product;
     handleDeleteClick: () => void;
 }
 
@@ -20,9 +19,7 @@ export default function ItemCard({
     quantity,
     handleQuantityPlusClick,
     handleQuantityMinusClick,
-    itemPrice,
-    itemName,
-    itemImgUrl,
+    product,
     handleDeleteClick,
 }: ItemCardProps) {
     return (
@@ -32,11 +29,11 @@ export default function ItemCard({
                 <ItemActionButton onClick={handleDeleteClick} text="삭제"></ItemActionButton>
             </CheckDeleteArea>
             <ItemInfoArea>
-                <ItemImage src={itemImgUrl} />
+                <ItemImage src={product.imgUrl} />
                 <ItemDetailInfo>
                     <>
-                        <ItemName>{itemName}</ItemName>
-                        <ItemPrice>{itemPrice.toLocaleString()}원</ItemPrice>
+                        <ItemName>{product.name}</ItemName>
+                        <ItemPrice>{product.price.toLocaleString()}원</ItemPrice>
                     </>
                     <ItemQuantityArea>
                         <ItemActionButton onClick={handleQuantityMinusClick} text="-" disabled={quantity <= 0} />

@@ -58,10 +58,10 @@ GET /products
   "data": {
     "products": [
       {
-        "productId": "string",
+        "id": "string",
         "name": "string",
         "price": "number",
-        "image": "string",
+        "imgUrl": "string",
         "stock": "number"
       }
     ]
@@ -83,7 +83,7 @@ POST /products
 | --- | --- |
 | Path Params | - |
 | Query Params | - |
-| Request Body | `{ name: string; price: number; image: string; stock: number }` |
+| Request Body | `{ name: string; price: number; imgUrl: string; stock: number }` |
 
 **`201 Created`**
 
@@ -91,10 +91,10 @@ POST /products
 {
   "status": 201,
   "data": {
-    "productId": "string",
+    "id": "string",
     "name": "string",
     "price": "number",
-    "image": "string",
+    "imgUrl": "string",
     "stock": "number"
   }
 }
@@ -168,7 +168,7 @@ DELETE /products/:productId
 {
   "status": 200,
   "data": {
-    "productId": "string"
+    "id": "string"
   }
 }
 ```
@@ -205,8 +205,8 @@ DELETE /products/:productId
 | --- | --- | --- |
 | `GET` | `/cart` | 장바구니 상품 조회 |
 | `GET` | `/cart/pay-info` | 장바구니 결제 정보 조회 |
-| `PATCH` | `/cartt/select/product/:productId` | 장바구니 단일 상품 선택 |
-| `PATCH` | `/cartt/select` | 장바구니 전체 상품 선택 |
+| `PATCH` | `/carts/select/product/:productId` | 장바구니 단일 상품 선택 |
+| `PATCH` | `/carts/select` | 장바구니 전체 상품 선택 |
 | `PATCH` | `/carts/products/:productId` | 장바구니 상품 수량 변경 |
 | `DELETE` | `/cart/product/:productId` | 장바구니 상품 삭제 |
 
@@ -230,16 +230,17 @@ GET /cart
 {
   "status": 200,
   "data": {
-    "id": "number // cart id",
     "isAllSelected": "boolean",
-    "products": [
+    "items": [
       {
-        "id": "number // product id",
-        "name": "string",
-        "price": "number",
-        "imgUrl": "string",
+        "product": {
+          "id": "string",
+          "name": "string",
+          "price": "number",
+          "imgUrl": "string",
+          "stock": "number"
+        },
         "quantity": "number",
-        "stock": "number",
         "checkStatus": "boolean"
       }
     ]
@@ -267,7 +268,6 @@ GET /cart/pay-info
 {
   "status": 200,
   "data": {
-    "id": "number // cart id",
     "orderPrice": "number",
     "deliveryFee": "number",
     "totalOrderAmount": "number"
@@ -280,14 +280,14 @@ GET /cart/pay-info
 ### 3. 장바구니 단일 상품 선택
 
 ```
-PATCH /cartt/select/product/:productId
+PATCH /carts/select/product/:productId
 ```
 
 | 구분 | 내용 |
 | --- | --- |
 | Path Params | `{ productId: string }` |
 | Query Params | - |
-| Request Body | `{ selectedStatus: boolean }` |
+| Request Body | `{ checkStatus: boolean }` |
 
 **`200 OK`**
 
@@ -295,15 +295,16 @@ PATCH /cartt/select/product/:productId
 {
   "status": 200,
   "data": {
-    "id": "number // cart id",
     "isAllSelected": "boolean",
-    "product": {
-      "id": "number // product id",
-      "name": "string",
-      "price": "number",
-      "imgUrl": "string",
+    "cartItem": {
+      "product": {
+        "id": "string",
+        "name": "string",
+        "price": "number",
+        "imgUrl": "string",
+        "stock": "number"
+      },
       "quantity": "number",
-      "stock": "number",
       "checkStatus": "boolean"
     }
   }
@@ -331,22 +332,22 @@ PATCH /cartt/select/product/:productId
 ```
 
 > **비고**
-> - 멱등성을 고려하여 상품 선택 body에 `selectedStatus`를 넘기기로 결정.
-> - 🟡 논의: 응답으로 products 정보를 조작한 productId에 대해서만 넘겨줘도 될까, 아니면 다 줘야 할까?
+> - 멱등성을 고려하여 상품 선택 body에 `checkStatus`를 넘기기로 결정.
+> - 🟡 논의: 응답으로 items 정보를 조작한 productId에 대해서만 넘겨줘도 될까, 아니면 다 줘야 할까?
 
 ---
 
 ### 4. 장바구니 전체 상품 선택
 
 ```
-PATCH /cartt/select
+PATCH /carts/select
 ```
 
 | 구분 | 내용 |
 | --- | --- |
 | Path Params | - |
 | Query Params | - |
-| Request Body | `{ selectedStatus: boolean }` |
+| Request Body | `{ checkStatus: boolean }` |
 
 **`200 OK`**
 
@@ -354,16 +355,17 @@ PATCH /cartt/select
 {
   "status": 200,
   "data": {
-    "id": "number // cart id",
     "isAllSelected": "boolean",
-    "products": [
+    "items": [
       {
-        "id": "number // product id",
-        "name": "string",
-        "price": "number",
-        "imgUrl": "string",
+        "product": {
+          "id": "string",
+          "name": "string",
+          "price": "number",
+          "imgUrl": "string",
+          "stock": "number"
+        },
         "quantity": "number",
-        "stock": "number",
         "checkStatus": "boolean"
       }
     ]
@@ -391,12 +393,15 @@ PATCH /carts/products/:productId
 {
   "status": 200,
   "data": {
-    "id": "string // product id",
-    "name": "string",
-    "price": "number",
-    "imgUrl": "string",
+    "product": {
+      "id": "string",
+      "name": "string",
+      "price": "number",
+      "imgUrl": "string",
+      "stock": "number"
+    },
     "quantity": "number",
-    "selectedStatus": "boolean"
+    "checkStatus": "boolean"
   }
 }
 ```
@@ -602,7 +607,6 @@ GET /order-check/pay-info
 {
   "status": 200,
   "data": {
-    "id": "number // cart id",
     "orderPrice": "number",
     "deliveryFee": "number",
     "totalOrderAmount": "number"
@@ -632,7 +636,7 @@ PATCH /order-check/select/remote-areas
 | --- | --- |
 | Path Params | - |
 | Query Params | - |
-| Request Body | `{ selectedStatus: boolean }` |
+| Request Body | `{ checkStatus: boolean }` |
 
 **`200 OK`**
 
@@ -640,7 +644,7 @@ PATCH /order-check/select/remote-areas
 {
   "status": 200,
   "data": {
-    "isSelected": "boolean"
+    "checkStatus": "boolean"
   }
 }
 ```
@@ -653,13 +657,13 @@ PATCH /order-check/select/remote-areas
   "errorCode": "MISSING_FIELD",
   "errorMessage": "string",
   "data": [
-    { "type": "selectedStatus", "errorCode": "REQUIRED" }
+    { "type": "checkStatus", "errorCode": "REQUIRED" }
   ]
 }
 ```
 
 > **비고**
-> - 멱등성을 고려하여 상품 선택 body에 `selectedStatus`를 넘기기로 결정.
+> - 멱등성을 고려하여 상품 선택 body에 `checkStatus`를 넘기기로 결정.
 > - 🟡 논의: 응답으로 products 정보를 조작한 productId에 대해서만 넘겨줘도 될까, 아니면 다 줘야 할까?
 
 ---

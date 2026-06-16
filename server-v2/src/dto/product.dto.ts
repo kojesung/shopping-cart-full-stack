@@ -1,17 +1,10 @@
 import type { SuccessResponse, FailResponse, FieldError } from '../response.js';
+import type { Product } from '../models/Product.js';
 
 /**
  * 상품(Product) API 요청/응답 DTO
  * @see docs/STEP3/API.md
  */
-
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  imgUrl: string;
-  stock: number;
-}
 
 /* ------------------------------------------------------------------------ */
 /* GET /products - 상품 목록 조회                                            */
@@ -27,7 +20,6 @@ export interface CreateProductRequestBody {
   name: string;
   price: number;
   imgUrl: string;
-  stock: number;
 }
 
 export type CreateProductResponse = SuccessResponse<Product>;
@@ -35,7 +27,7 @@ export type CreateProductResponse = SuccessResponse<Product>;
 // 400 - 필수 필드 누락
 export type CreateProductMissingFieldErrorResponse = FailResponse<FieldError[]>;
 
-// 400 - 필드 값이 도메인 유효성 조건을 벗어남 (예: price <= 0, stock 범위 초과 등)
+// 400 - 필드 값이 도메인 유효성 조건을 벗어남 (예: price <= 0 등)
 export type CreateProductInvalidErrorResponse = FailResponse<FieldError[]>;
 
 // 400 - 필드 타입 불일치

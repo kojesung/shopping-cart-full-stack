@@ -4,29 +4,29 @@ export const products = new Map<string, Product>();
 
 const dummyProducts: Product[] = [
   {
-    productId: '1',
+    id: '1',
     name: '망고',
     price: 5000,
-    image: 'https://example.com/images/mango.png',
+    imgUrl: 'https://example.com/images/mango.png',
     stock: 20,
   },
   {
-    productId: '2',
+    id: '2',
     name: '바나나',
     price: 3000,
-    image: 'https://example.com/images/banana.png',
+    imgUrl: 'https://example.com/images/banana.png',
     stock: 50,
   },
   {
-    productId: '3',
+    id: '3',
     name: '딸기',
     price: 8000,
-    image: 'https://example.com/images/strawberry.png',
+    imgUrl: 'https://example.com/images/strawberry.png',
     stock: 15,
   },
 ];
 
-dummyProducts.forEach((product) => products.set(product.productId, product));
+dummyProducts.forEach((product) => products.set(product.id, product));
 
 const generateUniqueId = (): string => {
   const id = crypto.randomUUID();
@@ -37,21 +37,21 @@ export const getAll = async () => {
   return Array.from(products.values());
 };
 
-export const insert = async (product: Omit<Product, 'productId'>) => {
+export const insert = async (product: Omit<Product, 'id'>) => {
   const productObj = {
-    productId: generateUniqueId(),
+    id: generateUniqueId(),
     ...product,
   };
 
-  products.set(productObj.productId, productObj);
+  products.set(productObj.id, productObj);
   return productObj;
 };
 
-export const getById = async (productId: Product['productId']) => {
+export const getById = async (productId: Product['id']) => {
   return products.get(productId);
 };
 
-export const deleteById = async (productId: Product['productId']) => {
+export const deleteById = async (productId: Product['id']) => {
   const product = products.get(productId);
 
   if (!product) return null;

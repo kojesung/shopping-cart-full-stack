@@ -6,10 +6,10 @@ import type { SuccessResponse, FailResponse, FieldError } from '../response.js';
  */
 
 export interface Product {
-  productId: string;
+  id: string;
   name: string;
   price: number;
-  image: string;
+  imgUrl: string;
   stock: number;
 }
 
@@ -26,7 +26,7 @@ export type GetProductsResponse = SuccessResponse<{ products: Product[] }>;
 export interface CreateProductRequestBody {
   name: string;
   price: number;
-  image: string;
+  imgUrl: string;
   stock: number;
 }
 
@@ -52,7 +52,7 @@ export interface DeleteProductRequestParams {
   productId: string;
 }
 
-export type DeleteProductResponse = SuccessResponse<{ productId: string }>;
+export type DeleteProductResponse = SuccessResponse<Pick<Product, 'id'>>;
 
 // 404 - productId가 누락됨
 export type DeleteProductMissingParamErrorResponse = FailResponse<undefined>;

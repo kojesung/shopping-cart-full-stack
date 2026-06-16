@@ -28,7 +28,7 @@ export const deleteProducts = async (
   try {
     const { productId } = req.params;
     const deleted = await productsService.deleteProduct(productId);
-    success(res, { productId: deleted.productId }, 200);
+    success(res, { id: deleted.id }, 200);
   } catch (error) {
     next(error);
   }

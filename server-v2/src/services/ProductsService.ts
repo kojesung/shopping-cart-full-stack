@@ -3,9 +3,9 @@ import * as productsRepository from '../repositories/ProductsRepository.js';
 import type { Product } from '../dto/product.dto.js';
 import type { FieldError } from '../response.js';
 
-type NewProduct = Omit<Product, 'productId'>;
+type NewProduct = Omit<Product, 'id'>;
 
-const REQUIRED_FIELDS: Array<keyof NewProduct> = ['name', 'price', 'image', 'stock'];
+const REQUIRED_FIELDS: Array<keyof NewProduct> = ['name', 'price', 'imgUrl', 'stock'];
 
 const findMissingFields = (product: Partial<NewProduct>): FieldError[] => {
   return REQUIRED_FIELDS.filter((field) => product[field] === undefined).map((field) => ({
@@ -17,7 +17,7 @@ const findMissingFields = (product: Partial<NewProduct>): FieldError[] => {
 const findTypeMismatchMessage = (product: NewProduct): string | null => {
   if (typeof product.name !== 'string') return '상품명은 문자열이어야 합니다.';
   if (typeof product.price !== 'number') return '가격은 숫자여야 합니다.';
-  if (typeof product.image !== 'string') return '상품 이미지는 문자열이어야 합니다.';
+  if (typeof product.imgUrl !== 'string') return '상품 이미지는 문자열이어야 합니다.';
   if (typeof product.stock !== 'number') return '재고는 숫자여야 합니다.';
   return null;
 };
@@ -77,11 +77,14 @@ export const insertProduct = async (product: Partial<NewProduct>) => {
   return await productsRepository.insert(product as NewProduct);
 };
 
-export const deleteProduct = async (productId: Product['productId']) => {
+export const deleteProduct = async (productId: Product['id']) => {
   const deleted = await productsRepository.deleteById(productId);
 
   if (!deleted) {
-    throw new NotFoundError({ errorCode: 'ROUTE_NOT_FOUND', errorMessage: '존재하지 않는 상품입니다.' });
+    throw new NotFoundError({
+      errorCode: 'ROUTE_NOT_FOUND',
+      errorMessage: '존재하지 않는 상품입니다.',
+    });
   }
 
   return deleted;

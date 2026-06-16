@@ -61,8 +61,7 @@ GET /products
         "id": "string",
         "name": "string",
         "price": "number",
-        "imgUrl": "string",
-        "stock": "number"
+        "imgUrl": "string"
       }
     ]
   }
@@ -83,7 +82,7 @@ POST /products
 | --- | --- |
 | Path Params | - |
 | Query Params | - |
-| Request Body | `{ name: string; price: number; imgUrl: string; stock: number }` |
+| Request Body | `{ name: string; price: number; imgUrl: string }` |
 
 **`201 Created`**
 
@@ -94,8 +93,7 @@ POST /products
     "id": "string",
     "name": "string",
     "price": "number",
-    "imgUrl": "string",
-    "stock": "number"
+    "imgUrl": "string"
   }
 }
 ```
@@ -113,7 +111,7 @@ POST /products
 }
 ```
 
-**`400 Bad Request`** — 필드 값이 도메인 유효성 조건을 벗어난 경우 (예: `price` ≤ 0, `stock` 범위 초과 등)
+**`400 Bad Request`** — 필드 값이 도메인 유효성 조건을 벗어난 경우 (예: `price` ≤ 0 등)
 
 ```jsonc
 {
@@ -231,14 +229,13 @@ GET /cart
   "status": 200,
   "data": {
     "isAllSelected": "boolean",
-    "items": [
+    "cartItems": [
       {
         "product": {
           "id": "string",
           "name": "string",
           "price": "number",
-          "imgUrl": "string",
-          "stock": "number"
+          "imgUrl": "string"
         },
         "quantity": "number",
         "checkStatus": "boolean"
@@ -301,8 +298,7 @@ PATCH /carts/select/product/:productId
         "id": "string",
         "name": "string",
         "price": "number",
-        "imgUrl": "string",
-        "stock": "number"
+        "imgUrl": "string"
       },
       "quantity": "number",
       "checkStatus": "boolean"
@@ -333,7 +329,7 @@ PATCH /carts/select/product/:productId
 
 > **비고**
 > - 멱등성을 고려하여 상품 선택 body에 `checkStatus`를 넘기기로 결정.
-> - 🟡 논의: 응답으로 items 정보를 조작한 productId에 대해서만 넘겨줘도 될까, 아니면 다 줘야 할까?
+> - 🟡 논의: 응답으로 cartItems 정보를 조작한 productId에 대해서만 넘겨줘도 될까, 아니면 다 줘야 할까?
 
 ---
 
@@ -356,14 +352,13 @@ PATCH /carts/select
   "status": 200,
   "data": {
     "isAllSelected": "boolean",
-    "items": [
+    "cartItems": [
       {
         "product": {
           "id": "string",
           "name": "string",
           "price": "number",
-          "imgUrl": "string",
-          "stock": "number"
+          "imgUrl": "string"
         },
         "quantity": "number",
         "checkStatus": "boolean"
@@ -397,8 +392,7 @@ PATCH /carts/products/:productId
       "id": "string",
       "name": "string",
       "price": "number",
-      "imgUrl": "string",
-      "stock": "number"
+      "imgUrl": "string"
     },
     "quantity": "number",
     "checkStatus": "boolean"

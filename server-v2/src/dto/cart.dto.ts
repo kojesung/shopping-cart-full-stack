@@ -1,20 +1,14 @@
 import type { SuccessResponse, FailResponse, FieldError } from '../response.js';
-import type { Product } from './product.dto.js';
+import type { CartItem } from '../models/CartItem.js';
 
 /**
  * 장바구니(Cart) API 요청/응답 DTO
  * @see docs/STEP3/API.md
  */
 
-export interface CartItem {
-  product: Product;
-  quantity: number;
-  checkStatus: boolean;
-}
-
 export interface Cart {
   isAllSelected: boolean;
-  products: CartItem[];
+  cartItems: CartItem[];
 }
 
 export interface CartPayInfo {
@@ -49,7 +43,7 @@ export interface SelectCartItemRequestBody {
 
 export type SelectCartItemResponse = SuccessResponse<{
   isAllSelected: boolean;
-  product: CartItem;
+  cartItem: CartItem;
 }>;
 
 // 404 - productId가 누락됨

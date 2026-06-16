@@ -5,7 +5,6 @@ import { CartItem } from '../models/CartItem.js';
 import type { Product } from '../models/Product.js';
 import type { Cart, CartPayInfo } from '../dto/cart.dto.js';
 
-// TODO: 배송비 정책이 명세에 없어 임시로 정한 값. 실제 정책이 정해지면 교체해야 한다.
 const DELIVERY_FEE = 3000;
 const FREE_DELIVERY_THRESHOLD = 100000;
 
@@ -13,7 +12,10 @@ const findProductOrThrow = async (productId: string) => {
   const product = await productsRepository.getById(productId);
 
   if (!product) {
-    throw new NotFoundError({ errorCode: 'ROUTE_NOT_FOUND', errorMessage: '존재하지 않는 상품입니다.' });
+    throw new NotFoundError({
+      errorCode: 'ROUTE_NOT_FOUND',
+      errorMessage: '존재하지 않는 상품입니다.',
+    });
   }
 
   return product;
@@ -23,7 +25,10 @@ const findCartItemRecordOrThrow = async (productId: string) => {
   const record = await cartItemsRepository.getByProductId(productId);
 
   if (!record) {
-    throw new NotFoundError({ errorCode: 'ROUTE_NOT_FOUND', errorMessage: '존재하지 않는 상품입니다.' });
+    throw new NotFoundError({
+      errorCode: 'ROUTE_NOT_FOUND',
+      errorMessage: '존재하지 않는 상품입니다.',
+    });
   }
 
   return record;
@@ -38,7 +43,11 @@ const buildCartItems = async (): Promise<CartItem[]> => {
     .filter((record) => productById.has(record.productId))
     .map(
       (record) =>
-        new CartItem(productById.get(record.productId) as Product, record.quantity, record.checkStatus),
+        new CartItem(
+          productById.get(record.productId) as Product,
+          record.quantity,
+          record.checkStatus,
+        ),
     );
 };
 
@@ -59,7 +68,10 @@ const validateQuantityShape = (quantity: unknown) => {
   }
 
   if (typeof quantity !== 'number') {
-    throw new BadRequestError({ errorCode: 'TYPE_MISSMATCH', errorMessage: '수량은 숫자여야 합니다.' });
+    throw new BadRequestError({
+      errorCode: 'TYPE_MISSMATCH',
+      errorMessage: '수량은 숫자여야 합니다.',
+    });
   }
 };
 
@@ -91,6 +103,7 @@ export const selectCartItem = async (productId: string, checkStatus: boolean) =>
     checkStatus: cartItem.checkStatus,
   });
 
+  // TODO 공통으로 빼기? 시간 남으면.. 시간 남으면 고민 ㄱㄱ
   const items = await buildCartItems();
   const isAllSelected = items.length > 0 && items.every((item) => item.checkStatus);
 
@@ -102,7 +115,10 @@ export const selectAllCartItems = async (checkStatus: boolean): Promise<Cart> =>
   return await getCart();
 };
 
-export const updateCartItemQuantity = async (productId: string, quantity: unknown): Promise<CartItem> => {
+export const updateCartItemQuantity = async (
+  productId: string,
+  quantity: unknown, 
+): Promise<CartItem> => {
   validateQuantityShape(quantity);
 
   const record = await findCartItemRecordOrThrow(productId);
@@ -122,7 +138,10 @@ export const deleteCartItem = async (productId: string) => {
   const deleted = await cartItemsRepository.deleteByProductId(productId);
 
   if (!deleted) {
-    throw new NotFoundError({ errorCode: 'ROUTE_NOT_FOUND', errorMessage: '존재하지 않는 상품입니다.' });
+    throw new NotFoundError({
+      errorCode: 'ROUTE_NOT_FOUND',
+      errorMessage: '존재하지 않는 상품입니다.',
+    });
   }
 
   return { deletedProductId: deleted.productId };

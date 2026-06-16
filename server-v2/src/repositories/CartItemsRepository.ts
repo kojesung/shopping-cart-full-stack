@@ -28,7 +28,10 @@ export const upsert = async (record: CartItemRecord) => {
 };
 
 export const setAllCheckStatus = async (checkStatus: boolean) => {
-  const updated = Array.from(cartItemRecords.values()).map((record) => ({ ...record, checkStatus }));
+  const updated = Array.from(cartItemRecords.values()).map((record) => ({
+    ...record,
+    checkStatus,
+  }));
   updated.forEach((record) => cartItemRecords.set(record.productId, record));
   return updated;
 };

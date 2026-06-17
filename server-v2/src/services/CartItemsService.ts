@@ -34,7 +34,7 @@ const findCartItemRecordOrThrow = async (productId: string) => {
   return record;
 };
 
-const buildCartItems = async (): Promise<CartItem[]> => {
+export const buildCartItems = async (): Promise<CartItem[]> => {
   const records = await cartItemsRepository.getAll();
   const products = await productsRepository.getAll();
   const productById = new Map(products.map((product) => [product.id, product]));
@@ -51,7 +51,7 @@ const buildCartItems = async (): Promise<CartItem[]> => {
     );
 };
 
-const calculateDeliveryFee = (orderPrice: number): number => {
+export const calculateDeliveryFee = (orderPrice: number): number => {
   if (orderPrice === 0) return 0;
   if (orderPrice >= FREE_DELIVERY_THRESHOLD) return 0;
   return DELIVERY_FEE;

@@ -522,7 +522,7 @@ DELETE /cart/product/:productId
 
 ---
 
-### 1. 주문 확인 생성 _(미결정)_
+### 1. 주문 확인 생성 
 
 (회원 정보는 heder에 보낸다고 가정, 회원 정보 기반으로 cartId를 판단할 것이라고 가정)
 
@@ -536,14 +536,24 @@ POST /order-check
 | Query Params | -    |
 | Request Body | -    |
 
-> **🟡 논의 중: body에 productId를 넘겨야 할까?**
->
-> **포도 생각**
-> selected 상태를 DB에 저장하는 현 상황에서, 클라이언트가 그 데이터를 바탕으로 선택된 상품 목록을 골라 body로 요청을 하게 된다면, 선택 상태의 원천이 서버와 클라이언트로 나뉘게 되는 것 같다. 서버에는 이미 `cart_items.selected` 값이 저장되어 있는데, 클라이언트가 다시 productId 또는 cartItemId 목록을 body로 전달하면 서버는 주문 생성 시점에 어떤 값을 기준으로 삼아야 하는지 모호해진다.
-> 예를 들어 DB에는 1번, 3번 상품만 선택되어 있는데 요청 body에는 1번, 2번, 3번 상품이 전달될 수 있다. 이 경우 DB의 선택 상태를 믿을지, 클라이언트가 보낸 요청 값을 믿을지 추가적인 판단과 검증이 필요해진다.
->
-> **라바 생각**
-> request body에 담아야 한다는 생각. 클라이언트에서 서버에 명확하게 어떤 것을 생성해 달라고 요청하는 느낌이 들고, 요청과 응답을 봤을 때 뭘 하는 건지 더 명확하게 드러난다. 클라이언트에서 상태를 다루지 않기 때문에 정보의 원천은 한 곳에 있다는 사실도 유지된다고 생각함. cartItem의 상태에 따라서 클라이언트 입장에서든 같은 요청에 다른 결과가 나타나게 되는 설계임.
+**`201 OK`**
+
+```jsonc
+{
+  "status": 201,
+  "data": {
+    "products": [
+      {
+        "id": "string // product id",
+        "name": "string",
+        "price": "number",
+        "imgUrl": "string",
+        "quantity": "number",
+      },
+    ],
+  },
+}
+```
 
 ---
 
@@ -652,10 +662,21 @@ PATCH /order-check/select/remote-areas
 }
 ```
 
+**`404 Not Found`** — 해당 유저의 장바구니로 만들어진 order table이 없을 때
+
+```jsonc
+{
+  "status": 404,
+  "errorCode": "RESOURCE_NOT_FOUND",
+  "errorMessage": "string",
+}
+```
+
 > **비고**
 >
 > - 멱등성을 고려하여 상품 선택 body에 `checkStatus`를 넘기기로 결정.
 > - 🟡 논의: 응답으로 products 정보를 조작한 productId에 대해서만 넘겨줘도 될까, 아니면 다 줘야 할까?
+> - 도서 산간 지역 체크 상태는 주문(order) 자체의 속성으로 관리하기로 결정 — 주문이 생성되기 전에는 이 값을 저장할 곳이 없으므로 `pay-info`와 동일한 404를 반환한다.
 
 ---
 

@@ -13,7 +13,7 @@ import type { CartPayInfo } from './cart.dto.js';
 
 // Request Body 없음. 인증 헤더로 식별한 사용자의 cartId를 서버가 직접 판단해 주문을 생성한다
 // (클라이언트가 productId/cartItemId 목록을 보내지 않기로 결정 — 선택 상태의 원천을 서버(DB) 하나로 유지).
-// TODO: 응답 형태(status code, response body)는 아직 명세에 정의되지 않아 타입을 만들지 않았다.
+export type CreateOrderCheckResponse = SuccessResponse<{ products: OrderCheckProduct[] }>;
 
 /* ------------------------------------------------------------------------ */
 /* GET /order-check - 주문 확인 상품 조회                                     */
@@ -52,3 +52,6 @@ export type SelectRemoteAreaResponse = SuccessResponse<{ checkStatus: boolean }>
 
 // 400 - checkStatus가 누락됨
 export type SelectRemoteAreaMissingFieldErrorResponse = FailResponse<FieldError[]>;
+
+// 404 - 해당 유저의 장바구니로 만들어진 order table이 없을 때
+export type SelectRemoteAreaNotFoundErrorResponse = FailResponse<undefined>;

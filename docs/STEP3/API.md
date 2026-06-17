@@ -30,11 +30,11 @@
 
 ### 엔드포인트 요약
 
-| Method | Endpoint | 설명 |
-| --- | --- | --- |
-| `GET` | `/products` | 상품 목록 조회 |
-| `POST` | `/products` | 상품 추가 |
-| `DELETE` | `/products/:productId` | 상품 삭제 |
+| Method   | Endpoint               | 설명           |
+| -------- | ---------------------- | -------------- |
+| `GET`    | `/products`            | 상품 목록 조회 |
+| `POST`   | `/products`            | 상품 추가      |
+| `DELETE` | `/products/:productId` | 상품 삭제      |
 
 ---
 
@@ -44,11 +44,11 @@
 GET /products
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | - |
-| Query Params | - |
-| Request Body | - |
+| 구분         | 내용 |
+| ------------ | ---- |
+| Path Params  | -    |
+| Query Params | -    |
+| Request Body | -    |
 
 **`200 OK`**
 
@@ -61,10 +61,10 @@ GET /products
         "id": "string",
         "name": "string",
         "price": "number",
-        "imgUrl": "string"
-      }
-    ]
-  }
+        "imgUrl": "string",
+      },
+    ],
+  },
 }
 ```
 
@@ -78,10 +78,10 @@ GET /products
 POST /products
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | - |
-| Query Params | - |
+| 구분         | 내용                                              |
+| ------------ | ------------------------------------------------- |
+| Path Params  | -                                                 |
+| Query Params | -                                                 |
 | Request Body | `{ name: string; price: number; imgUrl: string }` |
 
 **`201 Created`**
@@ -93,8 +93,8 @@ POST /products
     "id": "string",
     "name": "string",
     "price": "number",
-    "imgUrl": "string"
-  }
+    "imgUrl": "string",
+  },
 }
 ```
 
@@ -105,9 +105,7 @@ POST /products
   "status": 400,
   "errorCode": "MISSING_FIELD",
   "errorMessage": "string",
-  "data": [
-    { "type": "name", "errorCode": "REQUIRED" }
-  ]
+  "data": [{ "type": "name", "errorCode": "REQUIRED" }],
 }
 ```
 
@@ -118,9 +116,7 @@ POST /products
   "status": 400,
   "errorCode": "INVALID",
   "errorMessage": "string",
-  "data": [
-    { "type": "price", "errorCode": "string" }
-  ]
+  "data": [{ "type": "price", "errorCode": "string" }],
 }
 ```
 
@@ -130,17 +126,17 @@ POST /products
 {
   "status": 400,
   "errorCode": "TYPE_MISSMATCH",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
-**`400 Bad Request`** — 요청 body가 json 형태가 아닌 경우 *(request body가 필요한 모든 요청에서 검증)*
+**`400 Bad Request`** — 요청 body가 json 형태가 아닌 경우 _(request body가 필요한 모든 요청에서 검증)_
 
 ```jsonc
 {
   "status": 400,
   "errorCode": "NO_JSON",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -154,11 +150,11 @@ POST /products
 DELETE /products/:productId
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | `{ productId: string }` |
-| Query Params | - |
-| Request Body | - |
+| 구분         | 내용                    |
+| ------------ | ----------------------- |
+| Path Params  | `{ productId: string }` |
+| Query Params | -                       |
+| Request Body | -                       |
 
 **`200 OK`** — 정상적으로 productId를 받은 경우
 
@@ -166,8 +162,8 @@ DELETE /products/:productId
 {
   "status": 200,
   "data": {
-    "id": "string"
-  }
+    "id": "string",
+  },
 }
 ```
 
@@ -179,7 +175,7 @@ DELETE /products/:productId
 {
   "status": 404,
   "errorCode": "RESOURCE_NOT_FOUND",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -189,7 +185,7 @@ DELETE /products/:productId
 {
   "status": 404,
   "errorCode": "ROUTE_NOT_FOUND",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -199,14 +195,14 @@ DELETE /products/:productId
 
 ### 엔드포인트 요약
 
-| Method | Endpoint | 설명 |
-| --- | --- | --- |
-| `GET` | `/cart` | 장바구니 상품 조회 |
-| `GET` | `/cart/pay-info` | 장바구니 결제 정보 조회 |
-| `PATCH` | `/carts/select/product/:productId` | 장바구니 단일 상품 선택 |
-| `PATCH` | `/carts/select` | 장바구니 전체 상품 선택 |
-| `PATCH` | `/carts/products/:productId` | 장바구니 상품 수량 변경 |
-| `DELETE` | `/cart/product/:productId` | 장바구니 상품 삭제 |
+| Method   | Endpoint                           | 설명                    |
+| -------- | ---------------------------------- | ----------------------- |
+| `GET`    | `/cart`                            | 장바구니 상품 조회      |
+| `GET`    | `/cart/pay-info`                   | 장바구니 결제 정보 조회 |
+| `PATCH`  | `/carts/select/product/:productId` | 장바구니 단일 상품 선택 |
+| `PATCH`  | `/carts/select`                    | 장바구니 전체 상품 선택 |
+| `PATCH`  | `/carts/products/:productId`       | 장바구니 상품 수량 변경 |
+| `DELETE` | `/cart/product/:productId`         | 장바구니 상품 삭제      |
 
 ---
 
@@ -216,11 +212,11 @@ DELETE /products/:productId
 GET /cart
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | - |
-| Query Params | - |
-| Request Body | - |
+| 구분         | 내용 |
+| ------------ | ---- |
+| Path Params  | -    |
+| Query Params | -    |
+| Request Body | -    |
 
 **`200 OK`**
 
@@ -235,13 +231,13 @@ GET /cart
           "id": "string",
           "name": "string",
           "price": "number",
-          "imgUrl": "string"
+          "imgUrl": "string",
         },
         "quantity": "number",
-        "checkStatus": "boolean"
-      }
-    ]
-  }
+        "checkStatus": "boolean",
+      },
+    ],
+  },
 }
 ```
 
@@ -253,11 +249,11 @@ GET /cart
 GET /cart/pay-info
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | - |
-| Query Params | - |
-| Request Body | - |
+| 구분         | 내용 |
+| ------------ | ---- |
+| Path Params  | -    |
+| Query Params | -    |
+| Request Body | -    |
 
 **`200 OK`**
 
@@ -267,8 +263,8 @@ GET /cart/pay-info
   "data": {
     "orderPrice": "number",
     "deliveryFee": "number",
-    "totalOrderAmount": "number"
-  }
+    "totalOrderAmount": "number",
+  },
 }
 ```
 
@@ -280,10 +276,10 @@ GET /cart/pay-info
 PATCH /carts/select/product/:productId
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | `{ productId: string }` |
-| Query Params | - |
+| 구분         | 내용                       |
+| ------------ | -------------------------- |
+| Path Params  | `{ productId: string }`    |
+| Query Params | -                          |
 | Request Body | `{ checkStatus: boolean }` |
 
 **`200 OK`**
@@ -298,12 +294,12 @@ PATCH /carts/select/product/:productId
         "id": "string",
         "name": "string",
         "price": "number",
-        "imgUrl": "string"
+        "imgUrl": "string",
       },
       "quantity": "number",
-      "checkStatus": "boolean"
-    }
-  }
+      "checkStatus": "boolean",
+    },
+  },
 }
 ```
 
@@ -313,7 +309,7 @@ PATCH /carts/select/product/:productId
 {
   "status": 404,
   "errorCode": "ROUTE_NOT_FOUND",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -323,11 +319,12 @@ PATCH /carts/select/product/:productId
 {
   "status": 404,
   "errorCode": "RESOURCE_NOT_FOUND",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
 > **비고**
+>
 > - 멱등성을 고려하여 상품 선택 body에 `checkStatus`를 넘기기로 결정.
 > - 🟡 논의: 응답으로 cartItems 정보를 조작한 productId에 대해서만 넘겨줘도 될까, 아니면 다 줘야 할까?
 
@@ -339,10 +336,10 @@ PATCH /carts/select/product/:productId
 PATCH /carts/select
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | - |
-| Query Params | - |
+| 구분         | 내용                       |
+| ------------ | -------------------------- |
+| Path Params  | -                          |
+| Query Params | -                          |
 | Request Body | `{ checkStatus: boolean }` |
 
 **`200 OK`**
@@ -358,13 +355,13 @@ PATCH /carts/select
           "id": "string",
           "name": "string",
           "price": "number",
-          "imgUrl": "string"
+          "imgUrl": "string",
         },
         "quantity": "number",
-        "checkStatus": "boolean"
-      }
-    ]
-  }
+        "checkStatus": "boolean",
+      },
+    ],
+  },
 }
 ```
 
@@ -376,11 +373,11 @@ PATCH /carts/select
 PATCH /carts/products/:productId
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | `{ productId: string }` |
-| Query Params | - |
-| Request Body | `{ quantity: number }` |
+| 구분         | 내용                    |
+| ------------ | ----------------------- |
+| Path Params  | `{ productId: string }` |
+| Query Params | -                       |
+| Request Body | `{ quantity: number }`  |
 
 **`200 OK`** — 정상적으로 params를 받은 경우
 
@@ -392,11 +389,11 @@ PATCH /carts/products/:productId
       "id": "string",
       "name": "string",
       "price": "number",
-      "imgUrl": "string"
+      "imgUrl": "string",
     },
     "quantity": "number",
-    "checkStatus": "boolean"
-  }
+    "checkStatus": "boolean",
+  },
 }
 ```
 
@@ -407,9 +404,7 @@ PATCH /carts/products/:productId
   "status": 400,
   "errorCode": "MISSING_FIELD",
   "errorMessage": "string",
-  "data": [
-    { "type": "quantity", "errorCode": "string" }
-  ]
+  "data": [{ "type": "quantity", "errorCode": "string" }],
 }
 ```
 
@@ -419,7 +414,7 @@ PATCH /carts/products/:productId
 {
   "status": 400,
   "errorCode": "TYPE_MISSMATCH",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -430,19 +425,17 @@ PATCH /carts/products/:productId
   "status": 400,
   "errorCode": "INVALID",
   "errorMessage": "string",
-  "data": [
-    { "type": "string", "errorCode": "string" }
-  ]
+  "data": [{ "type": "string", "errorCode": "string" }],
 }
 ```
 
-**`400 Bad Request`** — 요청 body가 json 형태가 아닌 경우 *(request body가 필요한 모든 요청에서 검증)*
+**`400 Bad Request`** — 요청 body가 json 형태가 아닌 경우 _(request body가 필요한 모든 요청에서 검증)_
 
 ```jsonc
 {
   "status": 400,
   "errorCode": "NO_JSON",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -452,7 +445,7 @@ PATCH /carts/products/:productId
 {
   "status": 404,
   "errorCode": "RESOURCE_NOT_FOUND",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -462,7 +455,7 @@ PATCH /carts/products/:productId
 {
   "status": 404,
   "errorCode": "ROUTE_NOT_FOUND",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -474,11 +467,11 @@ PATCH /carts/products/:productId
 DELETE /cart/product/:productId
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | `{ productId: string }` |
-| Query Params | - |
-| Request Body | - |
+| 구분         | 내용                    |
+| ------------ | ----------------------- |
+| Path Params  | `{ productId: string }` |
+| Query Params | -                       |
+| Request Body | -                       |
 
 **`200 OK`** — 정상적으로 id를 받은 경우
 
@@ -486,8 +479,8 @@ DELETE /cart/product/:productId
 {
   "status": 200,
   "data": {
-    "deletedProductId": "string"
-  }
+    "deletedProductId": "string",
+  },
 }
 ```
 
@@ -497,7 +490,7 @@ DELETE /cart/product/:productId
 {
   "status": 404,
   "errorCode": "RESOURCE_NOT_FOUND",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -507,7 +500,7 @@ DELETE /cart/product/:productId
 {
   "status": 404,
   "errorCode": "ROUTE_NOT_FOUND",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -520,24 +513,28 @@ DELETE /cart/product/:productId
 
 ### 엔드포인트 요약
 
-| Method | Endpoint | 설명 |
-| --- | --- | --- |
-| `POST` | `/order-check` | 주문 확인 생성 *(미결정)* |
-| `GET` | `/order-check` | 주문 확인 상품 조회 |
-| `GET` | `/order-check/pay-info` | 주문 확인 결제 정보 조회 |
-| `PATCH` | `/order-check/select/remote-areas` | 도서 산간 지역 선택 |
+| Method  | Endpoint                           | 설명                     |
+| ------- | ---------------------------------- | ------------------------ |
+| `POST`  | `/order-check`                     | 주문 확인 생성           |
+| `GET`   | `/order-check`                     | 주문 확인 상품 조회      |
+| `GET`   | `/order-check/pay-info`            | 주문 확인 결제 정보 조회 |
+| `PATCH` | `/order-check/select/remote-areas` | 도서 산간 지역 선택      |
 
 ---
 
-### 1. 주문 확인 생성 *(미결정)*
+### 1. 주문 확인 생성 _(미결정)_
+
+(회원 정보는 heder에 보낸다고 가정, 회원 정보 기반으로 cartId를 판단할 것이라고 가정)
 
 ```
 POST /order-check
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Request Body | `{ }` *(미결정)* |
+| 구분         | 내용 |
+| ------------ | ---- |
+| Path Params  | -    |
+| Query Params | -    |
+| Request Body | -    |
 
 > **🟡 논의 중: body에 productId를 넘겨야 할까?**
 >
@@ -556,11 +553,11 @@ POST /order-check
 GET /order-check
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | - |
-| Query Params | - |
-| Request Body | - |
+| 구분         | 내용 |
+| ------------ | ---- |
+| Path Params  | -    |
+| Query Params | -    |
+| Request Body | -    |
 
 **`200 OK`**
 
@@ -574,10 +571,10 @@ GET /order-check
         "name": "string",
         "price": "number",
         "imgUrl": "string",
-        "quantity": "number"
-      }
-    ]
-  }
+        "quantity": "number",
+      },
+    ],
+  },
 }
 ```
 
@@ -589,11 +586,11 @@ GET /order-check
 GET /order-check/pay-info
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | - |
-| Query Params | - |
-| Request Body | - |
+| 구분         | 내용 |
+| ------------ | ---- |
+| Path Params  | -    |
+| Query Params | -    |
+| Request Body | -    |
 
 **`200 OK`**
 
@@ -603,8 +600,9 @@ GET /order-check/pay-info
   "data": {
     "orderPrice": "number",
     "deliveryFee": "number",
-    "totalOrderAmount": "number"
-  }
+    "couponDiscountAmount": "number",
+    "totalOrderAmount": "number",
+  },
 }
 ```
 
@@ -614,7 +612,7 @@ GET /order-check/pay-info
 {
   "status": 404,
   "errorCode": "RESOURCE_NOT_FOUND",
-  "errorMessage": "string"
+  "errorMessage": "string",
 }
 ```
 
@@ -626,10 +624,10 @@ GET /order-check/pay-info
 PATCH /order-check/select/remote-areas
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | - |
-| Query Params | - |
+| 구분         | 내용                       |
+| ------------ | -------------------------- |
+| Path Params  | -                          |
+| Query Params | -                          |
 | Request Body | `{ checkStatus: boolean }` |
 
 **`200 OK`**
@@ -638,8 +636,8 @@ PATCH /order-check/select/remote-areas
 {
   "status": 200,
   "data": {
-    "checkStatus": "boolean"
-  }
+    "checkStatus": "boolean",
+  },
 }
 ```
 
@@ -650,13 +648,12 @@ PATCH /order-check/select/remote-areas
   "status": 400,
   "errorCode": "MISSING_FIELD",
   "errorMessage": "string",
-  "data": [
-    { "type": "checkStatus", "errorCode": "REQUIRED" }
-  ]
+  "data": [{ "type": "checkStatus", "errorCode": "REQUIRED" }],
 }
 ```
 
 > **비고**
+>
 > - 멱등성을 고려하여 상품 선택 body에 `checkStatus`를 넘기기로 결정.
 > - 🟡 논의: 응답으로 products 정보를 조작한 productId에 대해서만 넘겨줘도 될까, 아니면 다 줘야 할까?
 
@@ -666,10 +663,10 @@ PATCH /order-check/select/remote-areas
 
 ### 엔드포인트 요약
 
-| Method | Endpoint | 설명 |
-| --- | --- | --- |
-| `GET` | `/order-check/coupons` | 쿠폰 정보 조회 |
-| `PATCH` | `/order-check/coupons` | 쿠폰 적용 |
+| Method  | Endpoint               | 설명           |
+| ------- | ---------------------- | -------------- |
+| `GET`   | `/order-check/coupons` | 쿠폰 정보 조회 |
+| `PATCH` | `/order-check/coupons` | 쿠폰 적용      |
 
 ---
 
@@ -679,11 +676,11 @@ PATCH /order-check/select/remote-areas
 GET /order-check/coupons
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | - |
-| Query Params | - |
-| Request Body | - |
+| 구분         | 내용 |
+| ------------ | ---- |
+| Path Params  | -    |
+| Query Params | -    |
+| Request Body | -    |
 
 **`200 OK`**
 
@@ -696,12 +693,10 @@ GET /order-check/coupons
         "couponId": "string",
         "disabled": "boolean",
         "discountAmount": "number",
-        "description": [
-          { "title": "string", "content": "string" }
-        ]
-      }
-    ]
-  }
+        "description": [{ "title": "string", "content": "string" }],
+      },
+    ],
+  },
 }
 ```
 
@@ -713,10 +708,10 @@ GET /order-check/coupons
 PATCH /order-check/coupons
 ```
 
-| 구분 | 내용 |
-| --- | --- |
-| Path Params | - |
-| Query Params | - |
+| 구분         | 내용                             |
+| ------------ | -------------------------------- |
+| Path Params  | -                                |
+| Query Params | -                                |
 | Request Body | `{ selectedCouponId: string[] }` |
 
 **`204 No Content`** — 정상 적용
@@ -729,7 +724,7 @@ PATCH /order-check/coupons
   "errorCode": "INVALID",
   "errorMessage": "string",
   "data": {
-    "errorCode": "INVALID_COUPON_COUNT"
-  }
+    "errorCode": "INVALID_COUPON_COUNT",
+  },
 }
 ```

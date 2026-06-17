@@ -529,7 +529,7 @@ DELETE /cart/product/:productId
 
 ---
 
-### 1. 주문 확인 생성 
+### 1. 주문 확인 생성
 
 (회원 정보는 heder에 보낸다고 가정, 회원 정보 기반으로 cartId를 판단할 것이라고 가정)
 
@@ -728,10 +728,10 @@ GET /order-check/coupons
       {
         "couponId": "string",
         "disabled": "boolean",
-        "discountAmount": "number",
         "description": [{ "title": "string", "content": "string" }],
       },
     ],
+    "selectedCoupons": "string[]",
   },
 }
 ```
@@ -762,5 +762,52 @@ PATCH /order-check/coupons
   "data": {
     "errorCode": "INVALID_COUPON_COUNT",
   },
+}
+```
+
+**`400 Bad Request`**
+
+```jsonc
+{
+  "status": 400,
+  "errorCode": "MISSING_FIELD",
+  "errorMessage": "string",
+  "data": [{ "type": "selectedCouponId", "errorCode": "REQUIRED" }],
+}
+```
+
+---
+
+### 3. 선택된 쿠폰 기반 할인액 계산 api
+
+```
+POST /order-check/coupons
+```
+
+| 구분         | 내용                             |
+| ------------ | -------------------------------- |
+| Path Params  | -                                |
+| Query Params | -                                |
+| Request Body | `{ selectedCouponId: string[] }` |
+
+**`200 Ok `**
+
+```jsonc
+{
+  "status": 200,
+  "data": {
+    "discountAmount": "number",
+  },
+}
+```
+
+**`400 Bad Request`**
+
+```jsonc
+{
+  "status": 400,
+  "errorCode": "MISSING_FIELD",
+  "errorMessage": "string",
+  "data": [{ "type": "selectedCouponId", "errorCode": "REQUIRED" }],
 }
 ```

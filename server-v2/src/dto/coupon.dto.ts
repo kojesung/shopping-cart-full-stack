@@ -8,7 +8,8 @@ import type { SuccessResponse, FailResponse, FieldError } from '../response.js';
 export type CouponDescription =
   | { type: 'EXPIRY_DATE'; content: { expiresAt: string } }
   | { type: 'MIN_ORDER_AMOUNT'; content: { minAmount: number } }
-  | { type: 'USABLE_TIME'; content: { from: string; to: string } };
+  | { type: 'USABLE_TIME'; content: { from: string; to: string } }
+  | { type: 'MIN_QUANTITY_PER_PRODUCT'; content: { minQuantity: number } };
 
 export interface Coupon {
   couponId: string;

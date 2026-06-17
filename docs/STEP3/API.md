@@ -237,9 +237,16 @@ GET /cart
         "checkStatus": "boolean",
       },
     ],
+    "payInfo": {
+      "orderPrice": "number",
+      "deliveryFee": "number",
+      "totalOrderAmount": "number",
+    },
   },
 }
 ```
+
+> 결제 정보는 화면에서 상품 목록과 항상 함께 쓰여 별도 요청을 줄이기 위해 같이 내려준다 (`GET /cart/pay-info`는 결제 정보만 갱신하고 싶을 때를 위해 유지).
 
 ---
 
@@ -584,9 +591,17 @@ GET /order-check
         "quantity": "number",
       },
     ],
+    "payInfo": {
+      "orderPrice": "number",
+      "deliveryFee": "number",
+      "couponDiscountAmount": "number",
+      "totalOrderAmount": "number",
+    },
   },
 }
 ```
+
+> 결제 정보는 화면에서 상품 목록과 항상 함께 쓰여 별도 요청을 줄이기 위해 같이 내려준다 (`GET /order-check/pay-info`는 결제 정보만 갱신하고 싶을 때를 위해 유지). 주문이 생성되기 전에는 `products`가 빈 배열이고 `payInfo`는 모두 0이다.
 
 ---
 

@@ -1,5 +1,6 @@
 import { NotFoundError, BadRequestError } from '../errors.js';
 import * as orderCheckRepository from '../repositories/OrderCheckRepository.js';
+import type { OrderCheckRecord } from '../repositories/OrderCheckRepository.js';
 import { buildCartItems, calculateDeliveryFee } from './CartItemsService.js';
 import type { OrderCheckProduct, OrderCheckPayInfo } from '../dto/orderCheck.dto.js';
 
@@ -26,6 +27,25 @@ const findOrderOrThrow = async () => {
   return order;
 };
 
+const computePayInfo = (order: OrderCheckRecord | null): OrderCheckPayInfo => {
+  const orderPrice = (order?.products ?? []).reduce(
+    (sum, product) => sum + product.price * product.quantity,
+    0,
+  );
+  const remoteAreaCheckStatus = order?.remoteAreaCheckStatus ?? false;
+  const deliveryFee =
+    calculateDeliveryFee(orderPrice) + (orderPrice > 0 && remoteAreaCheckStatus ? REMOTE_AREA_EXTRA_FEE : 0);
+  // TODO: 쿠폰 적용 기능 구현 전까지 0으로 고정.
+  const couponDiscountAmount = 0;
+
+  return {
+    orderPrice,
+    deliveryFee,
+    couponDiscountAmount,
+    totalOrderAmount: orderPrice + deliveryFee - couponDiscountAmount,
+  };
+};
+
 const validateCheckStatusShape = (checkStatus: unknown) => {
   if (checkStatus === undefined) {
     throw new BadRequestError({
@@ -44,30 +64,18 @@ export const createOrderCheck = async (): Promise<{ products: OrderCheckProduct[
   return { products: order.products };
 };
 
-export const getOrderCheckProducts = async (): Promise<{ products: OrderCheckProduct[] }> => {
+export const getOrderCheckProducts = async (): Promise<{
+  products: OrderCheckProduct[];
+  payInfo: OrderCheckPayInfo;
+}> => {
   const order = await orderCheckRepository.getOrder();
 
-  return { products: order?.products ?? [] };
+  return { products: order?.products ?? [], payInfo: computePayInfo(order) };
 };
 
 export const getOrderCheckPayInfo = async (): Promise<OrderCheckPayInfo> => {
   const order = await findOrderOrThrow();
-  const orderPrice = order.products.reduce(
-    (sum, product) => sum + product.price * product.quantity,
-    0,
-  );
-  const { remoteAreaCheckStatus } = order;
-  const deliveryFee =
-    calculateDeliveryFee(orderPrice) + (orderPrice > 0 && remoteAreaCheckStatus ? REMOTE_AREA_EXTRA_FEE : 0);
-  // TODO: 쿠폰 적용 기능 구현 전까지 0으로 고정.
-  const couponDiscountAmount = 0;
-
-  return {
-    orderPrice,
-    deliveryFee,
-    couponDiscountAmount,
-    totalOrderAmount: orderPrice + deliveryFee - couponDiscountAmount,
-  };
+  return computePayInfo(order);
 };
 
 export const selectRemoteArea = async (checkStatus: unknown): Promise<{ checkStatus: boolean }> => {

@@ -23,7 +23,11 @@ export type OrderCheckProduct = Product & {
   quantity: number;
 };
 
-export type GetOrderCheckResponse = SuccessResponse<{ products: OrderCheckProduct[] }>;
+// 상품 목록과 결제 정보를 한 번에 내려준다 (주문 확인 화면에서 항상 함께 쓰여 별도 요청을 줄임).
+export type GetOrderCheckResponse = SuccessResponse<{
+  products: OrderCheckProduct[];
+  payInfo: OrderCheckPayInfo;
+}>;
 
 /* ------------------------------------------------------------------------ */
 /* GET /order-check/pay-info - 주문 확인 결제 정보 조회                       */

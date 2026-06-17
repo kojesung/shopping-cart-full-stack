@@ -3,7 +3,7 @@ import * as cartItemsRepository from '../repositories/CartItemsRepository.js';
 import * as productsRepository from '../repositories/ProductsRepository.js';
 import { CartItem } from '../models/CartItem.js';
 import type { Product } from '../models/Product.js';
-import type { Cart, CartPayInfo } from '../dto/cart.dto.js';
+import type { Cart, CartPayInfo, CartWithPayInfo } from '../dto/cart.dto.js';
 
 const DELIVERY_FEE = 3000;
 const FREE_DELIVERY_THRESHOLD = 100000;
@@ -75,7 +75,7 @@ const validateQuantityShape = (quantity: unknown) => {
   }
 };
 
-export const getCart = async (): Promise<Cart> => {
+const buildCart = async (): Promise<Cart> => {
   const items = await buildCartItems();
   const isAllSelected = items.length > 0 && items.every((item) => item.checkStatus);
 
@@ -90,6 +90,13 @@ export const getCartPayInfo = async (): Promise<CartPayInfo> => {
   const deliveryFee = calculateDeliveryFee(orderPrice);
 
   return { orderPrice, deliveryFee, totalOrderAmount: orderPrice + deliveryFee };
+};
+
+export const getCart = async (): Promise<CartWithPayInfo> => {
+  const cart = await buildCart();
+  const payInfo = await getCartPayInfo();
+
+  return { ...cart, payInfo };
 };
 
 export const selectCartItem = async (productId: string, checkStatus: boolean) => {
@@ -112,7 +119,7 @@ export const selectCartItem = async (productId: string, checkStatus: boolean) =>
 
 export const selectAllCartItems = async (checkStatus: boolean): Promise<Cart> => {
   await cartItemsRepository.setAllCheckStatus(checkStatus);
-  return await getCart();
+  return await buildCart();
 };
 
 export const updateCartItemQuantity = async (

@@ -21,7 +21,12 @@ export interface CartPayInfo {
 /* GET /cart - 장바구니 상품 조회                                            */
 /* ------------------------------------------------------------------------ */
 
-export type GetCartResponse = SuccessResponse<Cart>;
+// 상품 목록과 결제 정보를 한 번에 내려준다 (장바구니 화면에서 항상 함께 쓰여 별도 요청을 줄임).
+export interface CartWithPayInfo extends Cart {
+  payInfo: CartPayInfo;
+}
+
+export type GetCartResponse = SuccessResponse<CartWithPayInfo>;
 
 /* ------------------------------------------------------------------------ */
 /* GET /cart/pay-info - 장바구니 결제 정보 조회                              */

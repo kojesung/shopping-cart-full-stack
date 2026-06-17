@@ -4,6 +4,7 @@ import CartItems from '../components/CartItems';
 import PageLayout from '../layouts/PageLayout';
 import { useCart } from '../hooks/useCart';
 import { getOrderSummary, FREE_DELIVERY_THRESHOLD } from '../utils/orderSummary';
+import OrderSummary from '../components/OrderSummary';
 
 export default function CartPage() {
     const {
@@ -19,7 +20,11 @@ export default function CartPage() {
         remove,
     } = useCart();
 
-    const { orderAmount, deliveryFee, totalAmount, totalQuantity } = getOrderSummary(products, quantityStatus, checkStatus);
+    const { orderAmount, deliveryFee, totalAmount, totalQuantity } = getOrderSummary(
+        products,
+        quantityStatus,
+        checkStatus
+    );
     const isButtonDisabled = apiStatus !== 'success' || !checkStatus.some(Boolean);
 
     const navigate = useNavigate();
@@ -67,21 +72,17 @@ export default function CartPage() {
                                 onDelete={remove}
                             />
                             <OrderInfoSection>
-                                <p>총 주문 금액이 {FREE_DELIVERY_THRESHOLD.toLocaleString()}원 이상일 경우 무료 배송됩니다.</p>
-                                <hr />
-                                <OrderTypeAmount>
-                                    <OrderType>주문 금액</OrderType>
-                                    <OrderAmount>{orderAmount.toLocaleString()}원</OrderAmount>
-                                </OrderTypeAmount>
-                                <OrderTypeAmount>
-                                    <OrderType>배송비</OrderType>
-                                    <OrderAmount>{deliveryFee.toLocaleString()}원</OrderAmount>
-                                </OrderTypeAmount>
-                                <hr />
-                                <OrderTypeAmount>
-                                    <OrderType>총 결제 금액</OrderType>
-                                    <OrderAmount>{totalAmount.toLocaleString()}원</OrderAmount>
-                                </OrderTypeAmount>
+                                {/* TODO DeliveryNotice Component */}
+                                <p>
+                                    총 주문 금액이 {FREE_DELIVERY_THRESHOLD.toLocaleString()}원 이상일 경우 무료
+                                    배송됩니다.
+                                </p>
+                                <OrderSummary
+                                    orderInfos={[
+                                        { summaryType: '주문 금액', summaryAmount: orderAmount },
+                                        { summaryType: '배송비', summaryAmount: deliveryFee },
+                                    ]}
+                                />
                             </OrderInfoSection>
                         </>
                     )}
@@ -117,23 +118,4 @@ const OrderInfoSection = styled.section`
     flex-direction: column;
     gap: 12px;
     margin-top: 24px;
-`;
-
-const OrderTypeAmount = styled.div`
-    display: flex;
-    justify-content: space-between;
-`;
-
-const OrderType = styled.p`
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 16px;
-    margin: 0;
-`;
-
-const OrderAmount = styled.p`
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 100%;
-    margin: 0;
 `;

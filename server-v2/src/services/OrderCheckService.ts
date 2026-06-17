@@ -6,16 +6,16 @@ import type { OrderCheckProduct, OrderCheckPayInfo } from '../dto/orderCheck.dto
 
 const REMOTE_AREA_EXTRA_FEE = 3000;
 
-const buildSelectedOrderCheckProducts = async (): Promise<OrderCheckProduct[]> => {
-  const items = await buildCartItems();
+const buildSelectedOrderCheckProducts = async (userId: string): Promise<OrderCheckProduct[]> => {
+  const items = await buildCartItems(userId);
 
   return items
     .filter((item) => item.checkStatus)
     .map((item) => ({ ...item.product, quantity: item.quantity }));
 };
 
-const findOrderOrThrow = async () => {
-  const order = await orderCheckRepository.getOrder();
+const findOrderOrThrow = async (userId: string) => {
+  const order = await orderCheckRepository.getOrder(userId);
 
   if (!order) {
     throw new NotFoundError({
@@ -57,31 +57,36 @@ const validateCheckStatusShape = (checkStatus: unknown) => {
 };
 
 // 장바구니에서 선택된 상품을 그대로 스냅샷으로 떠서 주문 확인을 생성한다.
-export const createOrderCheck = async (): Promise<{ products: OrderCheckProduct[] }> => {
-  const products = await buildSelectedOrderCheckProducts();
-  const order = await orderCheckRepository.createOrder(products);
+export const createOrderCheck = async (userId: string): Promise<{ products: OrderCheckProduct[] }> => {
+  const products = await buildSelectedOrderCheckProducts(userId);
+  const order = await orderCheckRepository.createOrder(userId, products);
 
   return { products: order.products };
 };
 
-export const getOrderCheckProducts = async (): Promise<{
+export const getOrderCheckProducts = async (
+  userId: string,
+): Promise<{
   products: OrderCheckProduct[];
   payInfo: OrderCheckPayInfo;
 }> => {
-  const order = await orderCheckRepository.getOrder();
+  const order = await orderCheckRepository.getOrder(userId);
 
   return { products: order?.products ?? [], payInfo: computePayInfo(order) };
 };
 
-export const getOrderCheckPayInfo = async (): Promise<OrderCheckPayInfo> => {
-  const order = await findOrderOrThrow();
+export const getOrderCheckPayInfo = async (userId: string): Promise<OrderCheckPayInfo> => {
+  const order = await findOrderOrThrow(userId);
   return computePayInfo(order);
 };
 
-export const selectRemoteArea = async (checkStatus: unknown): Promise<{ checkStatus: boolean }> => {
+export const selectRemoteArea = async (
+  userId: string,
+  checkStatus: unknown,
+): Promise<{ checkStatus: boolean }> => {
   validateCheckStatusShape(checkStatus);
 
-  const order = await findOrderOrThrow();
+  const order = await findOrderOrThrow(userId);
   const updated = await orderCheckRepository.setRemoteAreaCheckStatus(order, checkStatus as boolean);
   return { checkStatus: updated.remoteAreaCheckStatus };
 };

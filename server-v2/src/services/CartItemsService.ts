@@ -21,8 +21,8 @@ const findProductOrThrow = async (productId: string) => {
   return product;
 };
 
-const findCartItemRecordOrThrow = async (productId: string) => {
-  const record = await cartItemsRepository.getByProductId(productId);
+const findCartItemRecordOrThrow = async (userId: string, productId: string) => {
+  const record = await cartItemsRepository.getByProductId(userId, productId);
 
   if (!record) {
     throw new NotFoundError({
@@ -34,8 +34,8 @@ const findCartItemRecordOrThrow = async (productId: string) => {
   return record;
 };
 
-export const buildCartItems = async (): Promise<CartItem[]> => {
-  const records = await cartItemsRepository.getAll();
+export const buildCartItems = async (userId: string): Promise<CartItem[]> => {
+  const records = await cartItemsRepository.getAll(userId);
   const products = await productsRepository.getAll();
   const productById = new Map(products.map((product) => [product.id, product]));
 
@@ -75,15 +75,15 @@ const validateQuantityShape = (quantity: unknown) => {
   }
 };
 
-const buildCart = async (): Promise<Cart> => {
-  const items = await buildCartItems();
+const buildCart = async (userId: string): Promise<Cart> => {
+  const items = await buildCartItems(userId);
   const isAllSelected = items.length > 0 && items.every((item) => item.checkStatus);
 
   return { isAllSelected, cartItems: items };
 };
 
-export const getCartPayInfo = async (): Promise<CartPayInfo> => {
-  const items = await buildCartItems();
+export const getCartPayInfo = async (userId: string): Promise<CartPayInfo> => {
+  const items = await buildCartItems(userId);
   const orderPrice = items
     .filter((item) => item.checkStatus)
     .reduce((sum, item) => sum + item.product.price * item.quantity, 0);
@@ -92,47 +92,48 @@ export const getCartPayInfo = async (): Promise<CartPayInfo> => {
   return { orderPrice, deliveryFee, totalOrderAmount: orderPrice + deliveryFee };
 };
 
-export const getCart = async (): Promise<CartWithPayInfo> => {
-  const cart = await buildCart();
-  const payInfo = await getCartPayInfo();
+export const getCart = async (userId: string): Promise<CartWithPayInfo> => {
+  const cart = await buildCart(userId);
+  const payInfo = await getCartPayInfo(userId);
 
   return { ...cart, payInfo };
 };
 
-export const selectCartItem = async (productId: string, checkStatus: boolean) => {
-  const record = await findCartItemRecordOrThrow(productId);
+export const selectCartItem = async (userId: string, productId: string, checkStatus: boolean) => {
+  const record = await findCartItemRecordOrThrow(userId, productId);
   const product = await findProductOrThrow(productId);
   const cartItem = new CartItem(product, record.quantity, checkStatus);
 
-  await cartItemsRepository.upsert({
+  await cartItemsRepository.upsert(userId, {
     productId,
     quantity: cartItem.quantity,
     checkStatus: cartItem.checkStatus,
   });
 
   // TODO 공통으로 빼기? 시간 남으면.. 시간 남으면 고민 ㄱㄱ
-  const items = await buildCartItems();
+  const items = await buildCartItems(userId);
   const isAllSelected = items.length > 0 && items.every((item) => item.checkStatus);
 
   return { isAllSelected, cartItem };
 };
 
-export const selectAllCartItems = async (checkStatus: boolean): Promise<Cart> => {
-  await cartItemsRepository.setAllCheckStatus(checkStatus);
-  return await buildCart();
+export const selectAllCartItems = async (userId: string, checkStatus: boolean): Promise<Cart> => {
+  await cartItemsRepository.setAllCheckStatus(userId, checkStatus);
+  return await buildCart(userId);
 };
 
 export const updateCartItemQuantity = async (
+  userId: string,
   productId: string,
-  quantity: unknown, 
+  quantity: unknown,
 ): Promise<CartItem> => {
   validateQuantityShape(quantity);
 
-  const record = await findCartItemRecordOrThrow(productId);
+  const record = await findCartItemRecordOrThrow(userId, productId);
   const product = await findProductOrThrow(productId);
   const cartItem = new CartItem(product, quantity as number, record.checkStatus);
 
-  await cartItemsRepository.upsert({
+  await cartItemsRepository.upsert(userId, {
     productId,
     quantity: cartItem.quantity,
     checkStatus: cartItem.checkStatus,
@@ -141,8 +142,8 @@ export const updateCartItemQuantity = async (
   return cartItem;
 };
 
-export const deleteCartItem = async (productId: string) => {
-  const deleted = await cartItemsRepository.deleteByProductId(productId);
+export const deleteCartItem = async (userId: string, productId: string) => {
+  const deleted = await cartItemsRepository.deleteByProductId(userId, productId);
 
   if (!deleted) {
     throw new NotFoundError({

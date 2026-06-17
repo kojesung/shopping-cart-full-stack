@@ -5,17 +5,18 @@ export interface OrderCheckRecord {
   remoteAreaCheckStatus: boolean;
 }
 
-// 더미 저장소: 주문 확인은 사용자당 1건만 존재한다고 가정한다 (인증/사용자별 분리는 범위 밖).
-// TODO cartItem과 함께 멀티 유저 고려할 수 있는 자료구조로 수정
-let orderCheckRecord: OrderCheckRecord | null = null;
+// 더미 저장소: 사용자당 주문 확인은 1건만 존재한다고 가정한다. userId로 구분해서 보관해
+// 멀티유저를 받을 수 있게 해둔다.
+const orderCheckRecordsByUser = new Map<string, OrderCheckRecord>();
 
-export const getOrder = async () => {
-  return orderCheckRecord;
+export const getOrder = async (userId: string) => {
+  return orderCheckRecordsByUser.get(userId) ?? null;
 };
 
-export const createOrder = async (products: OrderCheckProduct[]) => {
-  orderCheckRecord = { products, remoteAreaCheckStatus: false };
-  return orderCheckRecord;
+export const createOrder = async (userId: string, products: OrderCheckProduct[]) => {
+  const record: OrderCheckRecord = { products, remoteAreaCheckStatus: false };
+  orderCheckRecordsByUser.set(userId, record);
+  return record;
 };
 
 export const setRemoteAreaCheckStatus = async (record: OrderCheckRecord, checkStatus: boolean) => {

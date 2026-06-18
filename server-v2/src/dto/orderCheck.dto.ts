@@ -34,7 +34,8 @@ export type GetOrderCheckResponse = SuccessResponse<{
 /* ------------------------------------------------------------------------ */
 
 // CartPayInfo(orderPrice/deliveryFee/totalOrderAmount)에 쿠폰 할인 정보를 추가한다.
-// couponDiscountAmount: 선택된 쿠폰으로 할인된 금액의 합. totalOrderAmount는 이 금액이 차감된 값이다.
+// deliveryFee는 무료배송 쿠폰까지 반영된 최종 배송비다.
+// couponDiscountAmount는 주문 금액(상품 금액)에 적용된 쿠폰 할인 합이다.
 export interface OrderCheckPayInfo extends CartPayInfo {
   couponDiscountAmount: number;
 }

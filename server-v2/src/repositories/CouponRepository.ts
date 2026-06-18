@@ -1,20 +1,19 @@
 import type { CouponDescription } from '../dto/coupon.dto.js';
 import * as orderCheckRepository from './OrderCheckRepository.js';
 
-// API로 노출하는 Coupon DTO보다 더 많은 정보(할인 계산에 필요한 값)를 들고 있는 저장소 전용 레코드.
-// FIXED/PERCENTAGE는 discountValue로 계산하고, BOGO/FREE_SHIPPING은 금액·비율로 표현되지 않는
-// 혜택이라 discountValue를 쓰지 않는다(0으로 둠).
-export interface CouponRecord {
+type BaseCouponRecord = {
   couponId: string;
   couponTitle: string;
-  discountType: 'FIXED' | 'PERCENTAGE' | 'BOGO' | 'FREE_SHIPPING';
-  discountValue: number; // FIXED면 원 단위 금액, PERCENTAGE면 0~1 사이 비율
   minOrderAmount: number;
-  minQuantityPerProduct?: number; // BOGO 전용: 동일 상품 최소 구매 수량
-  usableTime?: { from: string; to: string }; // 시간제 할인 전용
   expiresAt: string;
   description: CouponDescription[];
-}
+};
+
+export type CouponRecord =
+  | (BaseCouponRecord & { discountType: 'FIXED'; discountValue: number })
+  | (BaseCouponRecord & { discountType: 'PERCENTAGE'; discountValue: number; usableTime?: { from: string; to: string } })
+  | (BaseCouponRecord & { discountType: 'BOGO'; discountValue: 0; minQuantityPerProduct: number; getPerProduct: number })
+  | (BaseCouponRecord & { discountType: 'FREE_SHIPPING'; discountValue: 0 });
 
 const couponRecords = new Map<string, CouponRecord>();
 
@@ -38,6 +37,7 @@ const dummyCouponRecords: CouponRecord[] = [
     discountValue: 0,
     minOrderAmount: 0,
     minQuantityPerProduct: 2,
+    getPerProduct: 1,
     expiresAt: '2026-06-30',
     description: [
       { type: 'MIN_QUANTITY_PER_PRODUCT', content: { minQuantity: 2 } },

@@ -16,8 +16,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/swagger-ui-express": "^4.1.8",
     "cors": "^2.8.6",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@swc/core": "^1.15.33",

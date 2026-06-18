@@ -4,9 +4,11 @@ import * as productsRepository from '../repositories/ProductsRepository.js';
 import { CartItem } from '../models/CartItem.js';
 import type { Product } from '../models/Product.js';
 import type { Cart, CartPayInfo, CartWithPayInfo } from '../dto/cart.dto.js';
+import type { FieldError } from '../response.js';
 
 const DELIVERY_FEE = 3000;
 const FREE_DELIVERY_THRESHOLD = 100000;
+const REQUIRED_CART_ITEM_FIELDS = ['productId', 'quantity'] as const;
 
 const findProductOrThrow = async (productId: string) => {
   const product = await productsRepository.getById(productId);
@@ -75,6 +77,52 @@ const validateQuantityShape = (quantity: unknown) => {
   }
 };
 
+const findMissingCartItemFields = (cartItem: {
+  productId?: unknown;
+  quantity?: unknown;
+}): FieldError[] => {
+  return REQUIRED_CART_ITEM_FIELDS.filter((field) => cartItem[field] === undefined).map((field) => ({
+    type: field,
+    errorCode: 'REQUIRED',
+  }));
+};
+
+const validateAddCartItemShape = (cartItem: { productId?: unknown; quantity?: unknown }) => {
+  const missingFields = findMissingCartItemFields(cartItem);
+
+  if (missingFields.length > 0) {
+    throw new BadRequestError({
+      errorCode: 'MISSING_FIELD',
+      errorMessage: '필수 필드가 누락되었습니다.',
+      data: missingFields,
+    });
+  }
+
+  if (typeof cartItem.productId !== 'string') {
+    throw new BadRequestError({
+      errorCode: 'TYPE_MISSMATCH',
+      errorMessage: '상품 ID는 문자열이어야 합니다.',
+    });
+  }
+
+  if (typeof cartItem.quantity !== 'number') {
+    throw new BadRequestError({
+      errorCode: 'TYPE_MISSMATCH',
+      errorMessage: '수량은 숫자여야 합니다.',
+    });
+  }
+};
+
+const validateProductId = (productId: string) => {
+  if (productId.length > 0) return;
+
+  throw new BadRequestError({
+    errorCode: 'INVALID',
+    errorMessage: '상품 ID는 빈 문자열일 수 없습니다.',
+    data: [{ type: 'productId', errorCode: 'INVALID_LENGTH' }],
+  });
+};
+
 const buildCart = async (userId: string): Promise<Cart> => {
   const items = await buildCartItems(userId);
   const isAllSelected = items.length > 0 && items.every((item) => item.checkStatus);
@@ -97,6 +145,38 @@ export const getCart = async (userId: string): Promise<CartWithPayInfo> => {
   const payInfo = await getCartPayInfo(userId);
 
   return { ...cart, payInfo };
+};
+
+export const addCartItem = async (
+  userId: string,
+  cartItem: { productId?: unknown; quantity?: unknown },
+): Promise<CartItem> => {
+  validateAddCartItemShape(cartItem);
+  validateProductId(cartItem.productId as string);
+  validateQuantityShape(cartItem.quantity);
+
+  const productId = cartItem.productId as string;
+  const quantity = cartItem.quantity as number;
+  const existingRecord = await cartItemsRepository.getByProductId(userId, productId);
+
+  if (existingRecord) {
+    throw new BadRequestError({
+      errorCode: 'INVALID',
+      errorMessage: '이미 장바구니에 담긴 상품입니다.',
+      data: [{ type: 'productId', errorCode: 'DUPLICATED' }],
+    });
+  }
+
+  const product = await findProductOrThrow(productId);
+  const newCartItem = new CartItem(product, quantity, true);
+
+  await cartItemsRepository.upsert(userId, {
+    productId,
+    quantity: newCartItem.quantity,
+    checkStatus: newCartItem.checkStatus,
+  });
+
+  return newCartItem;
 };
 
 export const selectCartItem = async (userId: string, productId: string, checkStatus: boolean) => {

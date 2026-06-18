@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  postCartItem,
   getCart,
   getCartPayInfo,
   patchCartItemSelection,
@@ -10,6 +11,7 @@ import {
 
 const cartItemsRouter = Router();
 
+cartItemsRouter.post('/cart', postCartItem);
 cartItemsRouter.get('/cart', getCart);
 cartItemsRouter.get('/cart/pay-info', getCartPayInfo);
 cartItemsRouter.patch('/carts/select/product/:productId', patchCartItemSelection);

@@ -3,6 +3,15 @@ import * as cartItemsService from '../services/CartItemsService.js';
 import { success } from '../response.js';
 import { DUMMY_USER_ID } from '../constants.js';
 
+export const postCartItem = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const cartItem = await cartItemsService.addCartItem(DUMMY_USER_ID, req.body);
+    success(res, cartItem, 201);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getCart = async (_req: Request, res: Response, next: NextFunction) => {
   try {
     const cart = await cartItemsService.getCart(DUMMY_USER_ID);

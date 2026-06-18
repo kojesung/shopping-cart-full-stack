@@ -29,6 +29,25 @@ export interface CartWithPayInfo extends Cart {
 export type GetCartResponse = SuccessResponse<CartWithPayInfo>;
 
 /* ------------------------------------------------------------------------ */
+/* POST /cart - 장바구니 상품 추가                                           */
+/* ------------------------------------------------------------------------ */
+
+export interface AddCartItemRequestBody {
+  productId: string;
+  quantity: number;
+}
+
+export type AddCartItemResponse = SuccessResponse<CartItem>;
+
+export type AddCartItemMissingFieldErrorResponse = FailResponse<FieldError[]>;
+
+export type AddCartItemTypeMismatchErrorResponse = FailResponse<undefined>;
+
+export type AddCartItemInvalidErrorResponse = FailResponse<FieldError[]>;
+
+export type AddCartItemNotFoundResponse = FailResponse<undefined>;
+
+/* ------------------------------------------------------------------------ */
 /* GET /cart/pay-info - 장바구니 결제 정보 조회                              */
 /* ------------------------------------------------------------------------ */
 

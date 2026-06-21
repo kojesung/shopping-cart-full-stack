@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useNavigate } from 'react-router-dom';
 import PageLayout from '../layouts/PageLayout';
 import { useModal } from '../components/modal/useModal';
 import CouponCheckModal from '../components/CouponCheckModal';
@@ -10,6 +11,7 @@ import { useOrderCheck } from '../hooks/useOrderCheck';
 export default function OrderConfirmPage() {
     const {
         products,
+        payInfo,
         remoteAreaChecked,
         apiStatus,
         productCount,
@@ -21,14 +23,21 @@ export default function OrderConfirmPage() {
     } = useOrderCheck();
 
     const { open } = useModal();
+    const navigate = useNavigate();
 
     const handleCouponApply = async () => {
         await open<void>((close) => <CouponCheckModal close={() => close()} />);
         await refreshPayInfo();
     };
 
+    const handlePayment = () => {
+        navigate('/payment-complete', {
+            state: { productCount, totalQuantity, totalAmount: payInfo.totalOrderAmount },
+        });
+    };
+
     return (
-        <PageLayout bottomButtonLabel="결제하기" onBottomButtonClick={() => null} showBackButton>
+        <PageLayout bottomButtonLabel="결제하기" onBottomButtonClick={handlePayment} showBackButton>
             {apiStatus === 'loading' && <p>로딩 중...</p>}
             {apiStatus === 'error' && <p>주문 정보를 불러오지 못했습니다.</p>}
             {apiStatus === 'success' && (

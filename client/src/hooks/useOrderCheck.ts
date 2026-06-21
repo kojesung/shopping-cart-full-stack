@@ -56,6 +56,7 @@ export const useOrderCheck = () => {
 
     return {
         products,
+        payInfo,
         remoteAreaChecked,
         apiStatus,
         productCount,

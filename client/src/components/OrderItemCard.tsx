@@ -1,7 +1,7 @@
+import type { Product } from '../api/apiTypes';
 import ItemCardLayout from './ItemCardLayout';
 import ItemCardStyle from './ItemCardStyle';
 import ItemQuantityArea from './ItemQuantityArea';
-import type { Product } from '../api/cartApiService';
 
 interface OrderItemCardProps {
     product: Product;

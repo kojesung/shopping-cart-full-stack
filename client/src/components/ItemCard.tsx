@@ -4,7 +4,7 @@ import ItemActionButton from './ItemActionButton';
 import ItemCardLayout from './ItemCardLayout';
 import ItemCardStyle from './ItemCardStyle';
 import ItemQuantityArea from './ItemQuantityArea';
-import type { Product } from '../api/cartApiService';
+import type { Product } from '../api/apiTypes';
 
 interface ItemCardProps {
     checkStatus: boolean;

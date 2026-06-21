@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { useEffect, useRef, type ReactNode } from 'react';
 
 interface ModalProps {
@@ -13,8 +14,13 @@ export default function Modal({ render, onClose }: ModalProps) {
     }, []);
 
     return (
-        <dialog ref={dialogRef} onClose={onClose}>
+        <DialogDefaultStyle ref={dialogRef} onClose={onClose}>
             {render()}
-        </dialog>
+        </DialogDefaultStyle>
     );
 }
+
+const DialogDefaultStyle = styled.dialog`
+    border: none;
+    border-radius: 8px;
+`;

@@ -178,6 +178,23 @@ const computeDiscountAmount = (selectedCouponIds: string[], data: OrderCheckData
     return fixedDiscount + percentDiscount + bogoDiscount + shippingDiscount;
 };
 
+const computeBestCouponIds = (data: OrderCheckData): string[] => {
+    const orderPrice = data.products.reduce((sum, p) => sum + p.price * p.quantity, 0);
+    const validIds = COUPON_RECORDS.filter((r) => orderPrice >= r.minOrderAmount).map((r) => r.couponId);
+
+    const combinations: string[][] = [[]];
+    for (let i = 0; i < validIds.length; i++) {
+        combinations.push([validIds[i]]);
+        for (let j = i + 1; j < validIds.length; j++) {
+            combinations.push([validIds[i], validIds[j]]);
+        }
+    }
+
+    return combinations.reduce((best, combo) =>
+        computeDiscountAmount(combo, data) > computeDiscountAmount(best, data) ? combo : best
+    );
+};
+
 const toCouponDto = (record: CouponRecord, orderPrice: number) => ({
     couponId: record.couponId,
     couponTitle: record.couponTitle,
@@ -333,10 +350,12 @@ export const handlers = [
     http.get(`${BASE_URL}/order-check/coupons`, () => {
         const data = orderCheck ?? { products: [], remoteAreaCheckStatus: false, selectedCouponIds: [] };
         const orderPrice = data.products.reduce((sum, p) => sum + p.price * p.quantity, 0);
+        const selectedCoupons =
+            data.selectedCouponIds.length > 0 ? data.selectedCouponIds : computeBestCouponIds(data);
 
         return ok({
             coupons: COUPON_RECORDS.map((r) => toCouponDto(r, orderPrice)),
-            selectedCoupons: data.selectedCouponIds,
+            selectedCoupons,
         });
     }),
 

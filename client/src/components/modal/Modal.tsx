@@ -10,7 +10,7 @@ export default function Modal({ render, onClose }: ModalProps) {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     useEffect(() => {
-        if (dialogRef) dialogRef.current.showModal();
+        if (dialogRef.current) dialogRef.current.showModal();
     }, []);
 
     return (

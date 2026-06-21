@@ -35,10 +35,22 @@ interface CouponItemProps {
 }
 
 export default function CouponItem({ coupon, checked, disabled, onClick }: CouponItemProps) {
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick();
+        }
+    };
+
     return (
-        <CouponItemContainer disabled={disabled}>
+        <CouponItemContainer
+            disabled={disabled}
+            onClick={disabled ? undefined : onClick}
+            tabIndex={disabled ? -1 : 0}
+            onKeyDown={disabled ? undefined : handleKeyDown}
+        >
             <TitleRow>
-                <CheckBox checked={checked} onClick={onClick} disabled={disabled} />
+                <CheckBox checked={checked} disabled={disabled} />
                 <CouponTitle>{coupon.couponTitle}</CouponTitle>
             </TitleRow>
             <DescriptionList>

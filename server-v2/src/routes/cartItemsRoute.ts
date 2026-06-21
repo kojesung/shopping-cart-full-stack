@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import {
-  postCartItem,
-  getCart,
-  getCartPayInfo,
-  patchCartItemSelection,
-  patchAllCartItemsSelection,
-  patchCartItemQuantity,
-  deleteCartItem,
+    postCartItem,
+    getCart,
+    getCartPayInfo,
+    patchCartItemSelection,
+    patchAllCartItemsSelection,
+    patchCartItemQuantity,
+    deleteCartItem,
 } from '../controllers/CartItemsController.js';
 
 const cartItemsRouter = Router();

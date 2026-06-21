@@ -17,9 +17,9 @@ export type GetProductsResponse = SuccessResponse<{ products: Product[] }>;
 /* ------------------------------------------------------------------------ */
 
 export interface CreateProductRequestBody {
-  name: string;
-  price: number;
-  imgUrl: string;
+    name: string;
+    price: number;
+    imgUrl: string;
 }
 
 export type CreateProductResponse = SuccessResponse<Product>;
@@ -41,7 +41,7 @@ export type CreateProductNoJsonErrorResponse = FailResponse<undefined>;
 /* ------------------------------------------------------------------------ */
 
 export interface DeleteProductRequestParams {
-  productId: string;
+    productId: string;
 }
 
 export type DeleteProductResponse = SuccessResponse<Pick<Product, 'id'>>;

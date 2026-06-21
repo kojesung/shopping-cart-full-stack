@@ -6,17 +6,17 @@ import type { SuccessResponse, FailResponse, FieldError } from '../response.js';
  */
 
 export type CouponDescription =
-  | { type: 'EXPIRY_DATE'; content: { expiresAt: string } }
-  | { type: 'MIN_ORDER_AMOUNT'; content: { minAmount: number } }
-  | { type: 'USABLE_TIME'; content: { from: string; to: string } }
-  | { type: 'MIN_QUANTITY_PER_PRODUCT'; content: { minQuantity: number } };
+    | { type: 'EXPIRY_DATE'; content: { expiresAt: string } }
+    | { type: 'MIN_ORDER_AMOUNT'; content: { minAmount: number } }
+    | { type: 'USABLE_TIME'; content: { from: string; to: string } }
+    | { type: 'MIN_QUANTITY_PER_PRODUCT'; content: { minQuantity: number } };
 
 export interface Coupon {
-  couponId: string;
-  couponTitle: string;
-  disabled: boolean;
+    couponId: string;
+    couponTitle: string;
+    disabled: boolean;
 
-  description: CouponDescription[];
+    description: CouponDescription[];
 }
 
 /* ------------------------------------------------------------------------ */
@@ -24,8 +24,8 @@ export interface Coupon {
 /* ------------------------------------------------------------------------ */
 
 export type GetOrderCheckCouponsResponse = SuccessResponse<{
-  coupons: Coupon[];
-  selectedCoupons: string[];
+    coupons: Coupon[];
+    selectedCoupons: string[];
 }>;
 
 /* ------------------------------------------------------------------------ */
@@ -33,14 +33,14 @@ export type GetOrderCheckCouponsResponse = SuccessResponse<{
 /* ------------------------------------------------------------------------ */
 
 export interface SelectCouponsRequestBody {
-  selectedCouponId: string[];
+    selectedCouponId: string[];
 }
 
 // 204 No Content - 정상 적용 (응답 본문 없음)
 
 // 400 - 배열의 길이가 2를 초과함
 export type SelectCouponsInvalidCountErrorResponse = FailResponse<{
-  errorCode: 'INVALID_COUPON_COUNT';
+    errorCode: 'INVALID_COUPON_COUNT';
 }>;
 
 // 400 - selectedCouponId가 누락됨
@@ -56,7 +56,7 @@ export type CalculateCouponDiscountRequestBody = SelectCouponsRequestBody;
 
 // 200
 export type CalculateCouponDiscountResponse = SuccessResponse<{
-  discountAmount: number;
+    discountAmount: number;
 }>;
 // 400 - selectedCouponId가 누락됨
 export type CalculateCouponDiscountMissingFieldErrorResponse = FailResponse<FieldError[]>;

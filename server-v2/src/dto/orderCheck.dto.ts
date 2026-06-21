@@ -20,13 +20,13 @@ export type CreateOrderCheckResponse = SuccessResponse<{ products: OrderCheckPro
 /* ------------------------------------------------------------------------ */
 
 export type OrderCheckProduct = Product & {
-  quantity: number;
+    quantity: number;
 };
 
 // 상품 목록과 결제 정보를 한 번에 내려준다 (주문 확인 화면에서 항상 함께 쓰여 별도 요청을 줄임).
 export type GetOrderCheckResponse = SuccessResponse<{
-  products: OrderCheckProduct[];
-  payInfo: OrderCheckPayInfo;
+    products: OrderCheckProduct[];
+    payInfo: OrderCheckPayInfo;
 }>;
 
 /* ------------------------------------------------------------------------ */
@@ -37,7 +37,7 @@ export type GetOrderCheckResponse = SuccessResponse<{
 // deliveryFee는 무료배송 쿠폰까지 반영된 최종 배송비다.
 // couponDiscountAmount는 주문 금액(상품 금액)에 적용된 쿠폰 할인 합이다.
 export interface OrderCheckPayInfo extends CartPayInfo {
-  couponDiscountAmount: number;
+    couponDiscountAmount: number;
 }
 
 export type GetOrderCheckPayInfoResponse = SuccessResponse<OrderCheckPayInfo>;
@@ -50,7 +50,7 @@ export type GetOrderCheckPayInfoNotFoundResponse = FailResponse<undefined>;
 /* ------------------------------------------------------------------------ */
 
 export interface SelectRemoteAreaRequestBody {
-  checkStatus: boolean;
+    checkStatus: boolean;
 }
 
 export type SelectRemoteAreaResponse = SuccessResponse<{ checkStatus: boolean }>;

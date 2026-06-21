@@ -7,14 +7,14 @@ import type { CartItem } from '../models/CartItem.js';
  */
 
 export interface Cart {
-  isAllSelected: boolean;
-  cartItems: CartItem[];
+    isAllSelected: boolean;
+    cartItems: CartItem[];
 }
 
 export interface CartPayInfo {
-  orderPrice: number;
-  deliveryFee: number;
-  totalOrderAmount: number;
+    orderPrice: number;
+    deliveryFee: number;
+    totalOrderAmount: number;
 }
 
 /* ------------------------------------------------------------------------ */
@@ -23,7 +23,7 @@ export interface CartPayInfo {
 
 // 상품 목록과 결제 정보를 한 번에 내려준다 (장바구니 화면에서 항상 함께 쓰여 별도 요청을 줄임).
 export interface CartWithPayInfo extends Cart {
-  payInfo: CartPayInfo;
+    payInfo: CartPayInfo;
 }
 
 export type GetCartResponse = SuccessResponse<CartWithPayInfo>;
@@ -33,8 +33,8 @@ export type GetCartResponse = SuccessResponse<CartWithPayInfo>;
 /* ------------------------------------------------------------------------ */
 
 export interface AddCartItemRequestBody {
-  productId: string;
-  quantity: number;
+    productId: string;
+    quantity: number;
 }
 
 export type AddCartItemResponse = SuccessResponse<CartItem>;
@@ -58,16 +58,16 @@ export type GetCartPayInfoResponse = SuccessResponse<CartPayInfo>;
 /* ------------------------------------------------------------------------ */
 
 export interface SelectCartItemRequestParams {
-  productId: string;
+    productId: string;
 }
 
 export interface SelectCartItemRequestBody {
-  checkStatus: boolean;
+    checkStatus: boolean;
 }
 
 export type SelectCartItemResponse = SuccessResponse<{
-  isAllSelected: boolean;
-  cartItem: CartItem;
+    isAllSelected: boolean;
+    cartItem: CartItem;
 }>;
 
 // 404 - productId가 누락됨
@@ -81,7 +81,7 @@ export type SelectCartItemNotFoundResponse = FailResponse<undefined>;
 /* ------------------------------------------------------------------------ */
 
 export interface SelectAllCartItemsRequestBody {
-  checkStatus: boolean;
+    checkStatus: boolean;
 }
 
 export type SelectAllCartItemsResponse = SuccessResponse<Cart>;
@@ -91,11 +91,11 @@ export type SelectAllCartItemsResponse = SuccessResponse<Cart>;
 /* ------------------------------------------------------------------------ */
 
 export interface UpdateCartItemQuantityRequestParams {
-  productId: string;
+    productId: string;
 }
 
 export interface UpdateCartItemQuantityRequestBody {
-  quantity: number;
+    quantity: number;
 }
 
 export type UpdateCartItemQuantityResponse = SuccessResponse<CartItem>;
@@ -123,7 +123,7 @@ export type UpdateCartItemQuantityNotFoundResponse = FailResponse<undefined>;
 /* ------------------------------------------------------------------------ */
 
 export interface DeleteCartItemRequestParams {
-  productId: string;
+    productId: string;
 }
 
 export type DeleteCartItemResponse = SuccessResponse<{ deletedProductId: string }>;

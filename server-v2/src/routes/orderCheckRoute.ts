@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import {
-  postOrderCheck,
-  getOrderCheck,
-  getOrderCheckPayInfo,
-  patchRemoteAreaSelection,
-  getOrderCheckCoupons,
-  patchOrderCheckCoupons,
-  postOrderCheckCouponDiscount,
+    postOrderCheck,
+    getOrderCheck,
+    getOrderCheckPayInfo,
+    patchRemoteAreaSelection,
+    getOrderCheckCoupons,
+    patchOrderCheckCoupons,
+    postOrderCheckCouponDiscount,
 } from '../controllers/OrderCheckController.js';
 
 const orderCheckRouter = Router();

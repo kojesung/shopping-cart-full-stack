@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import type { ReactNode } from 'react';
-import type { Product } from '../api/cartApiService';
+import type { Product } from '../api/apiTypes';
 
 interface ItemCardLayoutProps {
     product: Product;

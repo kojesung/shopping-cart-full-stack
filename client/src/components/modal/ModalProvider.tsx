@@ -15,15 +15,15 @@ export function ModalProvider({ children }: { children: ReactNode }) {
         const id = crypto.randomUUID();
 
         return new Promise<T>((resolve) => {
-            setStack((prev) => [...prev, { id, render: render, resolve }]);
+            setStack((prev) => [...prev, { id, render, resolve } as unknown as ModalEntry]);
         });
     };
 
     // modal이 close될 때 호출할 함수, stack에서 제거시킨 뒤 resolve
-    const closeModal = (id: string, result) => {
+    const closeModal = (id: string, result: unknown) => {
         setStack((prev) => {
             const target = prev.find((entry) => entry.id === id);
-            target.resolve(result);
+            target?.resolve(result);
             return prev.filter((entry) => entry.id !== id);
         });
     };

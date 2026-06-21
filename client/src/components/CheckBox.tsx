@@ -4,7 +4,7 @@ import CheckWhite from '../../public/CheckWhite.svg';
 
 interface CheckBoxProps {
     checked: boolean;
-    onClick: () => void;
+    onClick?: () => void;
     disabled?: boolean;
 }
 

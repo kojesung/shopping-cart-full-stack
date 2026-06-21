@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import styled from '@emotion/styled';
+import { useCoupon } from '../hooks/useCoupon';
 import CouponItem from './CouponItem';
 
 // TODO 서버에서 그냥 string으로 통일해서 포맷팅된 값으로 반환해주면 타입 정의 필요 없어질듯
@@ -17,31 +17,19 @@ export interface Coupon {
 }
 
 interface CouponCheckModalProps {
-    coupons: Coupon[];
-    close: (selectedIds: string[]) => void;
+    close: () => void;
 }
 
 const MAX_COUPON_COUNT = 2;
 
-export default function CouponCheckModal({ coupons, close }: CouponCheckModalProps) {
-    const [selectedIds, setSelectedIds] = useState<string[]>([]); // TODO API로 초기 선택값 수신
-    const [discountAmount] = useState<number>(0); // TODO 선택 변경 시 API로 재계산
-
-    const toggle = (couponId: string) => {
-        setSelectedIds((prev) =>
-            prev.includes(couponId)
-                ? prev.filter((id) => id !== couponId)
-                : prev.length < MAX_COUPON_COUNT
-                ? [...prev, couponId]
-                : prev
-        );
-    };
+export default function CouponCheckModal({ close }: CouponCheckModalProps) {
+    const { coupons, selectedIds, discountAmount, toggle, handleConfirm } = useCoupon(close);
 
     return (
         <Container>
             <Header>
                 <Title>쿠폰을 선택해 주세요</Title>
-                <CloseButton onClick={() => close(selectedIds)}>✕</CloseButton>
+                <CloseButton onClick={close}>✕</CloseButton>
             </Header>
             <Notice>
                 <NoticeIcon>ⓘ</NoticeIcon>
@@ -61,7 +49,7 @@ export default function CouponCheckModal({ coupons, close }: CouponCheckModalPro
                     />
                 ))}
             </CouponList>
-            <ConfirmButton onClick={() => close(selectedIds)}>
+            <ConfirmButton onClick={handleConfirm}>
                 총 {discountAmount.toLocaleString()}원 할인 쿠폰 사용하기
             </ConfirmButton>
         </Container>

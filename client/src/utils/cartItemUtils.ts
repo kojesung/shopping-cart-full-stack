@@ -5,7 +5,7 @@ export const toggleCheck = (items: CartItem[], productId: string): CartItem[] =>
 
 export const toggleAllCheck = (items: CartItem[]): CartItem[] => {
     const allChecked = items.every((item) => item.checkStatus);
-    return items.map((item) => ({ ...item, checked: !allChecked }));
+    return items.map((item) => ({ ...item, checkStatus: !allChecked }));
 };
 
 export const increaseQuantity = (items: CartItem[], productId: string): CartItem[] =>

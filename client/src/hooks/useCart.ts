@@ -9,22 +9,28 @@ import {
     isAllChecked as getIsAllChecked,
 } from '../utils/cartItemUtils';
 import { cartItemsApiService } from '../api/cartItemsApiService';
-import type { CartItem, Product } from '../api/apiTypes';
+import type { CartItem, CartPayInfo, Product } from '../api/apiTypes';
 
 export const useCart = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const [payInfo, setPayInfo] = useState<CartPayInfo>({ orderPrice: 0, deliveryFee: 0, totalOrderAmount: 0 });
     const [apiStatus, setApiStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+    // 낙관적 업데이트용 -> 주문 금액 정보에는 낙관적 업데이트 적용하지 않으려고 했는데 만들어둔게 있어서 재활용
+    const refreshPayInfo = () => {
+        cartItemsApiService
+            .getCartPayInfo()
+            .then((res) => setPayInfo(res.data))
+            .catch(() => {});
+    };
 
     useEffect(() => {
         const fetchCart = async () => {
             setApiStatus('loading');
             try {
                 const data = await cartItemsApiService.getCart();
-                setCartItems(
-                    data.data.cartItems.map((product) => ({
-                        ...product,
-                    }))
-                );
+                setCartItems(data.data.cartItems.map((item) => ({ ...item })));
+                setPayInfo(data.data.payInfo);
                 setApiStatus('success');
             } catch {
                 setApiStatus('error');
@@ -40,6 +46,7 @@ export const useCart = () => {
             apiCallFn: () => cartItemsApiService.updateCartItemQuantity(productId, quantity + 1),
             onSuccess: () => setCartItems((prev) => increaseQuantity(prev, productId)),
             onError: () => setCartItems((prev) => decreaseQuantity(prev, productId)),
+            afterApiSuccess: refreshPayInfo,
         });
     };
 
@@ -49,6 +56,7 @@ export const useCart = () => {
             apiCallFn: () => cartItemsApiService.updateCartItemQuantity(productId, quantity - 1),
             onSuccess: () => setCartItems((prev) => decreaseQuantity(prev, productId)),
             onError: () => setCartItems((prev) => increaseQuantity(prev, productId)),
+            afterApiSuccess: refreshPayInfo,
         });
     };
 
@@ -59,11 +67,20 @@ export const useCart = () => {
             apiCallFn: () => cartItemsApiService.selectCartItem(productId, newCheckStatus),
             onSuccess: () => setCartItems((prev) => toggleCheck(prev, productId)),
             onError: () => setCartItems((prev) => toggleCheck(prev, productId)),
+            afterApiSuccess: refreshPayInfo,
         });
     };
 
     const handleToggleAll = () => {
-        setCartItems((prev) => toggleAllCheck(prev));
+        const prevItems = cartItems;
+        const newCheckStatus = !cartItems.every((item) => item.checkStatus);
+
+        optimisticUpdate({
+            apiCallFn: () => cartItemsApiService.selectAllCartItems(newCheckStatus),
+            onSuccess: () => setCartItems((prev) => toggleAllCheck(prev)),
+            onError: () => setCartItems(prevItems),
+            afterApiSuccess: refreshPayInfo,
+        });
     };
 
     const remove = async (productId: string) => {
@@ -73,6 +90,7 @@ export const useCart = () => {
             return;
         }
         setCartItems((prev) => removeItem(prev, productId));
+        refreshPayInfo();
     };
 
     const products: Product[] = cartItems.map(({ product, quantity }) => ({
@@ -91,6 +109,7 @@ export const useCart = () => {
         quantityStatus,
         checkStatus,
         isAllChecked,
+        payInfo,
         apiStatus,
         handleIncrease,
         handleDecrease,

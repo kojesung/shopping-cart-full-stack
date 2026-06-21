@@ -127,26 +127,32 @@ const fail = (status: number, errorCode: string, errorMessage: string) =>
     HttpResponse.json({ status, errorCode, errorMessage }, { status });
 
 const computeCartPayInfo = (items: CartItemData[]) => {
-    const orderPrice = items
-        .filter((i) => i.checkStatus)
-        .reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+    const orderPrice = items.filter((i) => i.checkStatus).reduce((sum, i) => sum + i.product.price * i.quantity, 0);
     const deliveryFee = orderPrice > 0 && orderPrice < FREE_DELIVERY_THRESHOLD ? DELIVERY_FEE : 0;
     return { orderPrice, deliveryFee, totalOrderAmount: orderPrice + deliveryFee };
+};
+
+const computeBogoDiscount = (products: OrderCheckData['products']): number => {
+    // BOGO 쿠폰: minQuantityPerProduct=2, getPerProduct=1 → 3개 이상 구매 상품 중 최고가 1개 무료
+    const eligible = products.filter((p) => p.quantity >= 3);
+    if (eligible.length === 0) return 0;
+    return Math.max(...eligible.map((p) => p.price));
 };
 
 const computeOrderCheckPayInfo = (data: OrderCheckData) => {
     const orderPrice = data.products.reduce((sum, p) => sum + p.price * p.quantity, 0);
     const baseDeliveryFee = orderPrice > 0 && orderPrice < FREE_DELIVERY_THRESHOLD ? DELIVERY_FEE : 0;
     const remoteAreaFee = orderPrice > 0 && data.remoteAreaCheckStatus ? REMOTE_AREA_EXTRA_FEE : 0;
-
-    const hasFreeShipping = data.selectedCouponIds.includes('FREESHIPPING') && orderPrice >= 50000;
-    const deliveryFee = hasFreeShipping ? remoteAreaFee : baseDeliveryFee + remoteAreaFee;
+    const deliveryFee = baseDeliveryFee + remoteAreaFee;
 
     const fixedDiscount = data.selectedCouponIds.includes('FIXED5000') && orderPrice >= 100000 ? 5000 : 0;
     const percentDiscount = data.selectedCouponIds.includes('MIRACLESALE')
         ? Math.floor((orderPrice - fixedDiscount) * 0.3)
         : 0;
-    const couponDiscountAmount = fixedDiscount + percentDiscount;
+    const bogoDiscount = data.selectedCouponIds.includes('BOGO') ? computeBogoDiscount(data.products) : 0;
+    const shippingDiscount = data.selectedCouponIds.includes('FREESHIPPING') && orderPrice >= 50000 ? deliveryFee : 0;
+
+    const couponDiscountAmount = fixedDiscount + percentDiscount + bogoDiscount + shippingDiscount;
 
     return {
         orderPrice,
@@ -156,14 +162,20 @@ const computeOrderCheckPayInfo = (data: OrderCheckData) => {
     };
 };
 
-const computeDiscountAmount = (selectedCouponIds: string[], orderPrice: number): number => {
+const computeDiscountAmount = (selectedCouponIds: string[], data: OrderCheckData): number => {
+    const orderPrice = data.products.reduce((sum, p) => sum + p.price * p.quantity, 0);
+    const baseDeliveryFee = orderPrice > 0 && orderPrice < FREE_DELIVERY_THRESHOLD ? DELIVERY_FEE : 0;
+    const remoteAreaFee = orderPrice > 0 && data.remoteAreaCheckStatus ? REMOTE_AREA_EXTRA_FEE : 0;
+    const deliveryFee = baseDeliveryFee + remoteAreaFee;
+
     const fixedDiscount = selectedCouponIds.includes('FIXED5000') && orderPrice >= 100000 ? 5000 : 0;
     const percentDiscount = selectedCouponIds.includes('MIRACLESALE')
         ? Math.floor((orderPrice - fixedDiscount) * 0.3)
         : 0;
-    const freeShippingDiscount =
-        selectedCouponIds.includes('FREESHIPPING') && orderPrice >= 50000 ? DELIVERY_FEE : 0;
-    return fixedDiscount + percentDiscount + freeShippingDiscount;
+    const bogoDiscount = selectedCouponIds.includes('BOGO') ? computeBogoDiscount(data.products) : 0;
+    const shippingDiscount = selectedCouponIds.includes('FREESHIPPING') && orderPrice >= 50000 ? deliveryFee : 0;
+
+    return fixedDiscount + percentDiscount + bogoDiscount + shippingDiscount;
 };
 
 const toCouponDto = (record: CouponRecord, orderPrice: number) => ({
@@ -259,7 +271,9 @@ export const handlers = [
 
     http.patch(`${BASE_URL}/carts/select`, async ({ request }) => {
         const body = (await request.json()) as Record<string, unknown>;
-        cartItems.forEach((i) => { i.checkStatus = body.checkStatus as boolean; });
+        cartItems.forEach((i) => {
+            i.checkStatus = body.checkStatus as boolean;
+        });
         return ok({
             isAllSelected: body.checkStatus as boolean,
             cartItems: cartItems.map((i) => ({ product: i.product, quantity: i.quantity, checkStatus: i.checkStatus })),
@@ -335,8 +349,8 @@ export const handlers = [
     http.post(`${BASE_URL}/order-check/coupons`, async ({ request }) => {
         const body = (await request.json()) as Record<string, unknown>;
         const selectedCouponId = body.selectedCouponId as string[];
-        const orderPrice = orderCheck?.products.reduce((sum, p) => sum + p.price * p.quantity, 0) ?? 0;
+        const data = orderCheck ?? { products: [], remoteAreaCheckStatus: false, selectedCouponIds: [] };
 
-        return ok({ discountAmount: computeDiscountAmount(selectedCouponId, orderPrice) });
+        return ok({ discountAmount: computeDiscountAmount(selectedCouponId, data) });
     }),
 ];

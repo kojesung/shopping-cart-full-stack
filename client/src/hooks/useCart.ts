@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { optimisticUpdate } from '../optimisticUpdate';
 import {
     toggleCheck,
@@ -8,29 +8,21 @@ import {
     removeItem,
     isAllChecked as getIsAllChecked,
 } from '../utils/cartItemUtils';
-import { cartApiService, type CartProduct, type Product } from '../api/cartApiService';
-
-export interface CartItem extends CartProduct {
-    checked: boolean;
-}
+import { cartItemsApiService } from '../api/cartItemsApiService';
+import type { CartItem, Product } from '../api/apiTypes';
 
 export const useCart = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [apiStatus, setApiStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-    const cartIdRef = useRef<number | null>(null);
 
     useEffect(() => {
         const fetchCart = async () => {
             setApiStatus('loading');
             try {
-                const data = await cartApiService.getCart(1);
-                cartIdRef.current = data.data.id;
-                const savedJson = localStorage.getItem('cart_checked_ids');
-                const savedIds = savedJson ? new Set(JSON.parse(savedJson) as number[]) : null;
+                const data = await cartItemsApiService.getCart();
                 setCartItems(
-                    data.data.products.map((product) => ({
+                    data.data.cartItems.map((product) => ({
                         ...product,
-                        checked: savedIds ? savedIds.has(product.id) : true,
                     }))
                 );
                 setApiStatus('success');
@@ -42,56 +34,56 @@ export const useCart = () => {
         fetchCart();
     }, []);
 
-    useEffect(() => {
-        if (cartItems.length === 0) return;
-        const checkedIds = cartItems.filter((item) => item.checked).map((item) => item.id);
-        localStorage.setItem('cart_checked_ids', JSON.stringify(checkedIds));
-    }, [cartItems]);
-
-    const handleIncrease = (productId: number) => {
-        const { quantity } = cartItems.find((item) => item.id === productId)!;
+    const handleIncrease = (productId: string) => {
+        const { quantity } = cartItems.find((item) => item.product.id === productId)!;
         optimisticUpdate({
-            apiCallFn: () => cartApiService.updateCartProductQuantity(cartIdRef.current!, productId, quantity + 1),
+            apiCallFn: () => cartItemsApiService.updateCartItemQuantity(productId, quantity + 1),
             onSuccess: () => setCartItems((prev) => increaseQuantity(prev, productId)),
             onError: () => setCartItems((prev) => decreaseQuantity(prev, productId)),
         });
     };
 
-    const handleDecrease = (productId: number) => {
-        const { quantity } = cartItems.find((item) => item.id === productId)!;
+    const handleDecrease = (productId: string) => {
+        const { quantity } = cartItems.find((item) => item.product.id === productId)!;
         optimisticUpdate({
-            apiCallFn: () => cartApiService.updateCartProductQuantity(cartIdRef.current!, productId, quantity - 1),
+            apiCallFn: () => cartItemsApiService.updateCartItemQuantity(productId, quantity - 1),
             onSuccess: () => setCartItems((prev) => decreaseQuantity(prev, productId)),
             onError: () => setCartItems((prev) => increaseQuantity(prev, productId)),
         });
     };
 
-    const handleToggle = (productId: number) => {
-        setCartItems((prev) => toggleCheck(prev, productId));
+    const handleToggle = (productId: string) => {
+        const newCheckStatus = !cartItems.find((item) => item.product.id === productId)!.checkStatus;
+
+        optimisticUpdate({
+            apiCallFn: () => cartItemsApiService.selectCartItem(productId, newCheckStatus),
+            onSuccess: () => setCartItems((prev) => toggleCheck(prev, productId)),
+            onError: () => setCartItems((prev) => toggleCheck(prev, productId)),
+        });
     };
 
     const handleToggleAll = () => {
         setCartItems((prev) => toggleAllCheck(prev));
     };
 
-    const remove = async (productId: number) => {
+    const remove = async (productId: string) => {
         try {
-            await cartApiService.deleteCartProduct(cartIdRef.current!, productId);
+            await cartItemsApiService.deleteCartItem(productId);
         } catch {
             return;
         }
         setCartItems((prev) => removeItem(prev, productId));
     };
 
-    const products: Product[] = cartItems.map(({ id, price, name, imgUrl, quantity }) => ({
-        id,
-        price,
-        name,
-        imgUrl,
+    const products: Product[] = cartItems.map(({ product, quantity }) => ({
+        id: product.id,
+        price: product.price,
+        name: product.name,
+        imgUrl: product.imgUrl,
         quantity,
     }));
     const quantityStatus = cartItems.map((item) => item.quantity);
-    const checkStatus = cartItems.map((item) => item.checked);
+    const checkStatus = cartItems.map((item) => item.checkStatus);
     const isAllChecked = getIsAllChecked(cartItems);
 
     return {

@@ -23,7 +23,7 @@ interface CouponCheckModalProps {
 const MAX_COUPON_COUNT = 2;
 
 export default function CouponCheckModal({ close }: CouponCheckModalProps) {
-    const { coupons, selectedIds, discountAmount, toggle, handleConfirm } = useCoupon(close);
+    const { coupons, selectedIds, discountAmount, isCouponDisabled, toggle, handleConfirm } = useCoupon(close);
 
     return (
         <Container>
@@ -41,11 +41,8 @@ export default function CouponCheckModal({ close }: CouponCheckModalProps) {
                         key={coupon.couponId}
                         coupon={coupon}
                         checked={selectedIds.includes(coupon.couponId)}
-                        disabled={
-                            coupon.disabled ||
-                            (selectedIds.length >= MAX_COUPON_COUNT && !selectedIds.includes(coupon.couponId))
-                        }
-                        onClick={() => toggle(coupon.couponId)}
+                        disabled={isCouponDisabled(coupon)}
+                        onClick={() => toggle(coupon)}
                     />
                 ))}
             </CouponList>

@@ -5,9 +5,9 @@ import { CartItem } from '../models/CartItem.js';
 import type { Product } from '../models/Product.js';
 import type { Cart, CartPayInfo, CartWithPayInfo } from '../dto/cart.dto.js';
 import type { FieldError } from '../response.js';
+import { FREE_DELIVERY_THRESHOLD } from '../../../client/src/utils/orderSummary';
 
 const DELIVERY_FEE = 3000;
-const FREE_DELIVERY_THRESHOLD = 100000;
 const REQUIRED_CART_ITEM_FIELDS = ['productId', 'quantity'] as const;
 
 const findProductOrThrow = async (productId: string) => {

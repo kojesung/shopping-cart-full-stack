@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { ApiStatus } from '../types';
 import { optimisticUpdate } from '../optimisticUpdate';
 import {
     toggleCheck,
@@ -14,7 +15,7 @@ import type { CartItem, CartPayInfo, Product } from '../api/apiTypes';
 export const useCart = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [payInfo, setPayInfo] = useState<CartPayInfo>({ orderPrice: 0, deliveryFee: 0, totalOrderAmount: 0 });
-    const [apiStatus, setApiStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [apiStatus, setApiStatus] = useState<ApiStatus>('idle');
 
     // 낙관적 업데이트용 -> 주문 금액 정보에는 낙관적 업데이트 적용하지 않으려고 했는데 만들어둔게 있어서 재활용
     const refreshPayInfo = () => {

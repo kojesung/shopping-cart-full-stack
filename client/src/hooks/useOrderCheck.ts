@@ -3,6 +3,7 @@ import { optimisticUpdate } from '../optimisticUpdate';
 import { orderCheckApiService } from '../api/orderCheckApiService';
 import { FREE_DELIVERY_THRESHOLD } from '../utils/orderSummary';
 import type { OrderCheckProduct, OrderCheckPayInfo } from '../api/apiTypes';
+import type { ApiStatus } from '../types';
 
 export const useOrderCheck = () => {
     const [products, setProducts] = useState<OrderCheckProduct[]>([]);
@@ -13,7 +14,7 @@ export const useOrderCheck = () => {
         couponDiscountAmount: 0,
     });
     const [remoteAreaChecked, setRemoteAreaChecked] = useState(false);
-    const [apiStatus, setApiStatus] = useState<'loading' | 'success' | 'error'>('loading');
+    const [apiStatus, setApiStatus] = useState<ApiStatus>('loading');
 
     const refreshPayInfo = async () => {
         const { data } = await orderCheckApiService.getOrderCheckPayInfo();

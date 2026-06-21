@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import CartItems from '../components/CartItems';
 import PageLayout from '../layouts/PageLayout';
 import { useCart } from '../hooks/useCart';
-import { getOrderSummary, FREE_DELIVERY_THRESHOLD } from '../utils/orderSummary';
 import OrderSummary from '../components/OrderSummary';
+import { FREE_DELIVERY_THRESHOLD } from '../utils/orderSummary';
 
 export default function CartPage() {
     const {
@@ -12,6 +12,7 @@ export default function CartPage() {
         quantityStatus,
         checkStatus,
         isAllChecked,
+        payInfo,
         apiStatus,
         handleIncrease,
         handleDecrease,
@@ -20,20 +21,15 @@ export default function CartPage() {
         remove,
     } = useCart();
 
-    const { orderAmount, deliveryFee, totalAmount, totalQuantity } = getOrderSummary(
-        products,
-        quantityStatus,
-        checkStatus
-    );
+    const totalQuantity = products.reduce((sum, _, i) => sum + (checkStatus[i] ? quantityStatus[i] : 0), 0);
     const isButtonDisabled = apiStatus !== 'success' || !checkStatus.some(Boolean);
-
     const navigate = useNavigate();
     const handleOrder = () => {
         navigate('/order-confirm', {
             state: {
                 productCount: checkStatus.filter(Boolean).length,
                 totalQuantity,
-                totalAmount,
+                totalAmount: payInfo.totalOrderAmount,
             },
         });
     };
@@ -79,8 +75,8 @@ export default function CartPage() {
                                 </p>
                                 <OrderSummary
                                     orderInfos={[
-                                        { summaryType: '주문 금액', summaryAmount: orderAmount },
-                                        { summaryType: '배송비', summaryAmount: deliveryFee },
+                                        { summaryType: '주문 금액', summaryAmount: payInfo.orderPrice },
+                                        { summaryType: '배송비', summaryAmount: payInfo.deliveryFee },
                                     ]}
                                 />
                             </OrderInfoSection>

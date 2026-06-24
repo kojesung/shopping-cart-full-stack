@@ -37,6 +37,7 @@ export const useCoupon = (close: () => void) => {
     const toggle = async (coupon: Coupon) => {
         if (isCouponDisabled(coupon)) return;
 
+        const prevIds = selectedIds;
         const isSelected = selectedIds.includes(coupon.couponId);
         const next = isSelected
             ? selectedIds.filter((id) => id !== coupon.couponId)
@@ -47,7 +48,7 @@ export const useCoupon = (close: () => void) => {
             const { data } = await orderCheckApiService.calculateCouponDiscount(next);
             setDiscountAmount(data.discountAmount);
         } catch {
-            setDiscountAmount(0);
+            setSelectedIds(prevIds);
         }
     };
 

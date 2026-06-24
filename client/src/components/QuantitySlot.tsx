@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
 import type { ReactNode } from 'react';
 
-interface ItemQuantityAreaProps {
+interface QuantitySlotProps {
     children: ReactNode;
 }
 
-export default function ItemQuantityArea({ children }: ItemQuantityAreaProps) {
-    return <ItemQuantityAreaStyle>{children}</ItemQuantityAreaStyle>;
+export default function QuantitySlot({ children }: QuantitySlotProps) {
+    return <QuantitySlotStyle>{children}</QuantitySlotStyle>;
 }
 
-const ItemQuantityAreaStyle = styled.div`
+const QuantitySlotStyle = styled.div`
     display: flex;
     align-items: center;
     gap: 4.5px;

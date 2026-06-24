@@ -3,8 +3,8 @@ import CheckBox from './CheckBox';
 import ItemActionButton from './ItemActionButton';
 import ItemCardLayout from './ItemCardLayout';
 import ItemCardStyle from './ItemCardStyle';
-import ItemQuantityArea from './ItemQuantityArea';
 import type { Product } from '../api/apiTypes';
+import QuantitySlot from './QuantitySlot';
 
 interface ItemCardProps {
     checkStatus: boolean;
@@ -34,11 +34,11 @@ export default function ItemCard({
             <ItemCardLayout
                 product={product}
                 quantityArea={
-                    <ItemQuantityArea>
+                    <QuantitySlot>
                         <ItemActionButton onClick={handleQuantityMinusClick} text="-" disabled={quantity <= 0} />
                         <Quantity>{quantity}</Quantity>
                         <ItemActionButton onClick={handleQuantityPlusClick} text="+" disabled={quantity >= 99} />
-                    </ItemQuantityArea>
+                    </QuantitySlot>
                 }
             />
         </ItemCardStyle>

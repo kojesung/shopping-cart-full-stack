@@ -1,7 +1,7 @@
 import type { Product } from '../api/apiTypes';
 import ItemCardLayout from './ItemCardLayout';
 import ItemCardStyle from './ItemCardStyle';
-import ItemQuantityArea from './ItemQuantityArea';
+import QuantitySlot from './QuantitySlot';
 
 interface OrderItemCardProps {
     product: Product;
@@ -11,7 +11,7 @@ interface OrderItemCardProps {
 export default function OrderItemCard({ product, quantity }: OrderItemCardProps) {
     return (
         <ItemCardStyle>
-            <ItemCardLayout product={product} quantityArea={<ItemQuantityArea>수량 {quantity}개</ItemQuantityArea>} />
+            <ItemCardLayout product={product} quantityArea={<QuantitySlot>수량 {quantity}개</QuantitySlot>} />
         </ItemCardStyle>
     );
 }

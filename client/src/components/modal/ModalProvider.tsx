@@ -2,20 +2,21 @@ import { useState, type ReactNode } from 'react';
 import Modal from './Modal';
 import { ModalContext } from './ModalContext';
 
-interface ModalEntry {
+interface ModalEntry<T> {
     id: string;
-    render: (close: (result: unknown) => void) => ReactNode;
-    resolve: (result: unknown) => void;
+    render: (close: (result: T) => void) => ReactNode;
+    resolve: (result: T) => void;
 }
 
 export function ModalProvider({ children }: { children: ReactNode }) {
-    const [stack, setStack] = useState<ModalEntry[]>([]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [stack, setStack] = useState<ModalEntry<any>[]>([]);
 
     const open = <T,>(render: (close: (result: T) => void) => ReactNode): Promise<T> => {
         const id = crypto.randomUUID();
 
         return new Promise<T>((resolve) => {
-            setStack((prev) => [...prev, { id, render, resolve } as unknown as ModalEntry]);
+            setStack((prev) => [...prev, { id, render, resolve }]);
         });
     };
 

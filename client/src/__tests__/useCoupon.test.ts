@@ -161,6 +161,42 @@ describe('useCoupon', () => {
         expect(result.current.selectedIds).not.toContain('FIXED5000');
     });
 
+    it('toggle API 실패 시 selectedIds가 이전 상태로 롤백된다', async () => {
+        server.use(
+            http.post(`${BASE_URL}/order-check/coupons`, () =>
+                HttpResponse.json({ status: 500 }, { status: 500 })
+            )
+        );
+
+        const { result } = renderHook(() => useCoupon(jest.fn()));
+        await waitFor(() => expect(result.current.apiStatus).toBe('success'));
+
+        const bogo = result.current.coupons.find((c) => c.couponId === 'BOGO')!;
+        await act(async () => {
+            await result.current.toggle(bogo);
+        });
+
+        expect(result.current.selectedIds).toEqual([]);
+    });
+
+    it('toggle API 실패 시 discountAmount가 변경되지 않는다', async () => {
+        server.use(
+            http.post(`${BASE_URL}/order-check/coupons`, () =>
+                HttpResponse.json({ status: 500 }, { status: 500 })
+            )
+        );
+
+        const { result } = renderHook(() => useCoupon(jest.fn()));
+        await waitFor(() => expect(result.current.apiStatus).toBe('success'));
+
+        const bogo = result.current.coupons.find((c) => c.couponId === 'BOGO')!;
+        await act(async () => {
+            await result.current.toggle(bogo);
+        });
+
+        expect(result.current.discountAmount).toBe(0);
+    });
+
     it('handleConfirm 호출 시 selectCoupons API가 호출되고 close가 실행된다', async () => {
         const close = jest.fn();
         const { result } = renderHook(() => useCoupon(close));

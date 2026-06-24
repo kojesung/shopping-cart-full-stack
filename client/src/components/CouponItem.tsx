@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import CheckBox from './CheckBox';
-import type { Coupon, CouponDescription } from './CouponCheckModal';
+import type { Coupon } from './CouponCheckModal';
+import type { CouponDescription } from '../api/apiTypes';
 
 // TODO 서버에서 string으로 형변환해서 주면 이 포맷팅 함수도 불필요
 const formatDescription = (desc: CouponDescription): string => {

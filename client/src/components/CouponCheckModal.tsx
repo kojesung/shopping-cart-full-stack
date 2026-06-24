@@ -1,13 +1,7 @@
 import styled from '@emotion/styled';
 import { useCoupon } from '../hooks/useCoupon';
 import CouponItem from './CouponItem';
-
-// TODO 서버에서 그냥 string으로 통일해서 포맷팅된 값으로 반환해주면 타입 정의 필요 없어질듯
-export type CouponDescription =
-    | { type: 'EXPIRY_DATE'; content: { expiresAt: string } }
-    | { type: 'MIN_ORDER_AMOUNT'; content: { minAmount: number } }
-    | { type: 'USABLE_TIME'; content: { from: string; to: string } }
-    | { type: 'MIN_QUANTITY_PER_PRODUCT'; content: { minQuantity: number } };
+import type { CouponDescription } from '../api/apiTypes';
 
 export interface Coupon {
     couponId: string;

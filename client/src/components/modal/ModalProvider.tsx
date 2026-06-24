@@ -22,11 +22,9 @@ export function ModalProvider({ children }: { children: ReactNode }) {
 
     // modal이 close될 때 호출할 함수, stack에서 제거시킨 뒤 resolve
     const closeModal = (id: string, result: unknown) => {
-        setStack((prev) => {
-            const target = prev.find((entry) => entry.id === id);
-            target?.resolve(result);
-            return prev.filter((entry) => entry.id !== id);
-        });
+        const target = stack.find((entry) => entry.id === id);
+        setStack((prev) => prev.filter((entry) => entry.id !== id));
+        target?.resolve(result);
     };
     return (
         <ModalContext.Provider value={{ open }}>
